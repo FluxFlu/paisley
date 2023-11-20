@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Paisley | Require</title>
+    <link rel="icon" type="image/x-icon" href="../../assets/Paisley.png">
+    <link rel="stylesheet" type="text/css" href="../../style.css" />
+    <script src="../../format.js"></script>
+</head>
+
+<body><br><br>
+    <h1>
+        Require
+    </h1>
+    <div>
+
+
+        <h>What is the require directive</h>
+
+        <p>
+            The <cb>#require</cb> directive is used to import both macros and real values from a file that has <cb>export</cb>ed them.
+
+            When requiring macros, one uses their name to refer to them.
+        </p>
+        <br><br>
+        <h>How to require</h>
+
+        <p>
+            The require directive follows the syntax of <cb>#require [value1, value2, value3...] from [path to file]</cb>
+        </p>
+
+        <br><br>
+        <h>Example of a full code block</h>
+        <pre>
+#require [x, y] from [./export.sly]
+
+console.log($&lt;x + 200&gt; + y);
+</pre>
+    </div>
+</body>
+
+</html>

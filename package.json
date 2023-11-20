@@ -1,0 +1,29 @@
+{
+  "name": "paisley",
+  "version": "1.0.0",
+  "description": "A grindy javascript precompiler. Javascript the way you want it.",
+  "main": "paisley",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "node ./tests/run_tests.js",
+    "lint": "npx eslint ./ --global \"__dirname,process\" --ignore-pattern \"src/errors/**\" --ignore-pattern \"src/error.js\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FluxFlu/paisley.git"
+  },
+  "author": "Missy \"FluxFlu\"",
+  "bin": {
+    "paisley": "./paisley.js"
+  },
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/FluxFlu/paisley/issues"
+  },
+  "homepage": "https://github.com/FluxFlu/paisley#readme",
+  "devDependencies": {
+    "eslint": "^8.54.0"
+  }
+}

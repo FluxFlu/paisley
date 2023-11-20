@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Paisley | Compiler Flags</title>
+    <link rel="icon" type="image/x-icon" href="../assets/Paisley.png">
+    <link rel="stylesheet" type="text/css" href="../style.css" />
+    <script src="../format.js"></script>
+</head>
+
+<body><br><br>
+    <h1>
+        Compiler Flags
+    </h1>
+    <div>
+        <!-- <h>make-script</h>
+
+        <p>
+            The <cb>make-script</cb> compiler flag automatically adds a shebang to the main file and runs <cb>chmod(500)</cb> on it.
+
+            Options are:
+        </p>
+        <ul>
+            <li>true</li>
+            <li>false</li>
+        </ul>
+        <p>
+            Default is <cb>true</cb>.
+        </p> -->
+
+        <!-- <h>type</h>
+
+        <p>
+            The <cb>type</cb> compiler flag determines which type of js the program is to be compiled to.
+
+            Options are:
+        </p>
+        <ul>
+            <li>node</li>
+        </ul>
+        <p>
+            Default is <cb>node</cb>.
+        </p> -->
+
+        <h>throw-for-errors</h>
+
+        <p>
+            The <cb>throw-for-errors</cb> compiler flag determines whether the program should throw an error on compilation failure, or simply exit cleanly with an exit value of 1.
+
+            Options are:
+        </p>
+        <ul>
+            <li>true</li>
+            <li>false</li>
+        </ul>
+        <p>
+            Default is <cb>false</cb>.
+        </p>
+
+        <h>use-abnormal-filenames</h>
+
+        <p>
+            The <cb>use-abnormal-filenames</cb> compiler flag determines whether filenames that don't end in <cb>.sly</cb> should be accepted.
+
+            Options are:
+        </p>
+        <ul>
+            <li>true</li>
+            <li>false</li>
+        </ul>
+
+        <p>
+            Default is <cb>false</cb>.
+        </p>
+
+        <h>keyboard-layout</h>
+
+        <p>
+            The <cb>keyboard-layout</cb> compiler flag determines which keyboard layout you are using, for the purpose of typo analysis.
+
+            Options are:
+        </p>
+        <ul>
+            <li>qwerty</li>
+            <li>azerty</li>
+            <li>dvorak</li>
+            <li>colemac</li>
+        </ul>
+
+        <p>
+            Default is <cb>qwerty</cb>.
+        </p>
+
+        <h>typo-threshold</h>
+
+        <p>
+            The <cb>typo-threshold</cb> compiler flag determines how far away two keys can be from each other and still be considered a typo.
+
+            Value can be any integer.
+
+            Default is <cb>2</cb>.
+        </p>
+
+        <h>error-threshold</h>
+
+        <p>
+            The <cb>error-threshold</cb> compiler flag determines how many differences two identifiers can have and still be considered similar.
+
+            Value can be any integer.
+
+            Default is <cb>3</cb>.
+        </p>
+    </div>
+</body>
+
+</html>

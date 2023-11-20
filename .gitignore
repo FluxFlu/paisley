@@ -1,0 +1,8 @@
+test.*
+
+node_modules
+
+pids
+*.pid
+*.seed
+*.pid.lock

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Paisley | Function Hoisting</title>
+    <link rel="icon" type="image/x-icon" href="../assets/Paisley.png">
+    <link rel="stylesheet" type="text/css" href="../style.css" />
+    <script src="../format.js"></script>
+</head>
+
+<body><br><br>
+    <h1>
+        Function Hoisting
+    </h1>
+    <div>
+        <h>What is function hoisting?</h>
+
+        <p>Hoisting is when declarations are moved to an earlier point in the file, typically moved to the beginning of the scope.</p>
+
+        <p>Function hoisting in Paisley is when the creation of a function literal is moved to another point in a file to save on resources. It is done by replacing <cb>=></cb> with <cb>==></cb> during function creation.</p>
+
+        <br><br>
+        <h>An example of function hoisting</h>
+        <p>Both of the following blocks of code do the same thing, but the second one (hypothetically) runs faster.</p>
+        <pre>
+const arr = [ [ {x: 0, y: 0}, {x: 1, y: 1}, {x: 2, y: 2} ], [ {x: 3, y: 3}, {x: 4, y: 4}, {x: 5, y: 5} ] ];
+
+for (let i = 0; i &lt; arr.length; i++) {
+    arr[i] = arr[i].map(e <highlight>=></highlight> e.x);
+}
+</pre>
+        <pre>
+const arr = [ [ {x: 0, y: 0}, {x: 1, y: 1}, {x: 2, y: 2} ], [ {x: 3, y: 3}, {x: 4, y: 4}, {x: 5, y: 5} ] ];
+    
+for (let i = 0; i &lt; arr.length; i++) {
+    arr[i] = arr[i].map(e <highlight>==></highlight> e.x);
+}
+</pre>
+
+        <p>The compiled code will look something like this:</p>
+        <pre>
+<highlight>const paisley_early_fn_0 = e => e.x;</highlight>
+
+const arr = [ [ {x: 0, y: 0}, {x: 1, y: 1}, {x: 2, y: 2} ], [ {x: 3, y: 3}, {x: 4, y: 4}, {x: 5, y: 5} ] ];
+    
+for (let i = 0; i &lt; arr.length; i++) {
+    arr[i] = arr[i].map(<highlight>paisley_early_fn_0</highlight>);
+}
+</pre>
+        <p>
+            The difference here occurs because in the second example, the function is hoisted, meaning it is declared earlier on in the file and referenced later, rather than being re-created each time the loop code occurs.
+
+            This doesn't make much of a difference in this example, and in fact, the hoisted code block is likely slower, but for instances where the loop runs many more times than just two, it can make a big difference.
+        </p>
+        <br><br>
+        <h>The fn_location directive</h>
+        <p>The <cb>#fn_location</cb> directive can be used to decide where the hoisted functions are moved to in that file.</p>
+        <pre>
+const arr = [ [ {x: 0, y: 0}, {x: 1, y: 1}, {x: 2, y: 2} ], [ {x: 3, y: 3}, {x: 4, y: 4}, {x: 5, y: 5} ] ];
+
+function main(args) {
+    #fn_location
+
+    for (let i = 0; i &lt; arr.length; i++) {
+        arr[i] = arr[i].map(e ==> e.x <highlight>+ args</highlight>);
+    }
+
+}   
+</pre>
+
+        <p>The compiled code will look something like this:</p>
+        <pre>
+const arr = [ [ {x: 0, y: 0}, {x: 1, y: 1}, {x: 2, y: 2} ], [ {x: 3, y: 3}, {x: 4, y: 4}, {x: 5, y: 5} ] ];
+
+function main(args) {
+    <highlight>const paisley_early_fn_0 = e => e.x + args</highlight>
+
+    for (let i = 0; i &lt; arr.length; i++) {
+        arr[i] = arr[i].map(<highlight>paisley_early_fn_0</highlight>);
+    }
+
+}
+</pre>
+
+
+
+        <p>The argument <cb>args</cb> can be referenced in the function in this example because the function is declared as part of <cb>main</cb>.</p>
+    </div>
+</body>
+
+</html>

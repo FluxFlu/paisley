@@ -1,0 +1,72 @@
+h1 {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    text-align: center;
+    color: #b0b0b0;
+}
+body {
+    background-color: #101010;
+}
+div {
+    display: block;
+    padding: 5vw;
+    margin: 5vw;
+    margin-left: 15vw;
+    margin-right: 15vw;
+    background-color: #222;
+    border-radius: 1vh 1vh;
+}
+p, pre, a, cb, li {
+    margin-top: 2vh;
+    margin-bottom: 5vh;
+    padding-top: .2vh;
+    padding-bottom: .2vh;
+    color: #b0b0b0;
+    font-size: 2.5vh;
+
+    white-space: pre-wrap;
+    font: normal;
+}
+ul {
+    margin-top: 0;
+    margin-bottom: 5vh;
+}
+li {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+pre {
+    padding-top: 1.8vh;
+    padding-bottom: 1.8vh;
+}
+a {
+    color: #1070a9
+    /* 2F87BC */
+}
+comment {
+    color: #207930;
+}
+highlight {
+    color: #b61212;
+}
+cb {
+    background-color: #303030;
+    border-radius: .8vh .8vh;
+    padding-left: .4vw;
+    padding-right: .4vw;
+    font-family: monospace;
+}
+pre {
+    background-color: #303030;
+    border-radius: 1.4vh 1.4vh;
+    font-family: monospace;
+    padding-left: .6vw;
+}
+h {
+    font-size: 3.3vh;
+}
+hSub {
+    font-size: 2.8vh;
+}
+h, hSub {
+    color: #3E57B2;
+}

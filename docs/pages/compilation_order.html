@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Paisley | Compilation Order</title>
+    <link rel="icon" type="image/x-icon" href="../assets/Paisley.png">
+    <link rel="stylesheet" type="text/css" href="../style.css" />
+    <script src="../format.js"></script>
+</head>
+
+<body><br><br>
+    <h1>
+        Compilation Order
+    </h1>
+    <div>
+        <h>Directives are interpreted</h>
+
+        <p>
+            Directives are lines of code starting with a pound <cb>#</cb>.
+
+            Interpreting these is the first step in compilation, which is the reason the following code still runs properly:
+
+        </p>
+        <pre>
+console.log(x);
+#define x [200]
+</pre>
+        <br><br>
+        <h>Values are cooked</h>
+        <p>
+            Cooking is the term for evaluating code at compile time rather than runtime using angle braces <cb>$&lt;&gt;</cb>.
+
+            An example of this is as follows:
+
+        </p>
+        <pre>
+#define x [200]
+console.log($&lt;x + 20&gt;);
+</pre>
+        <br><br>
+        <h>Macros are handled</h>
+        <p>
+            Macro substitution is when values are substituted for other values at compile time. This is done using the directives <cb>#define</cb>, <cb>#macro</cb>, and <cb>#procedure</cb>.
+
+            These being interpreted after token groups is the reason the following code still runs properly:
+        </p>
+        <pre>
+#macro add[x, y] [x + y]
+console.log(add(1 + 2, 3 ));
+</pre>
+        <br><br>
+        <h>Values are cooked a second time</h>
+        <p>
+            The final code is then cooked again.
+
+            This is the reason the following code works:
+        </p>
+        <pre>
+#macro add[x, y] [$&lt;x + y&gt;]
+console.log(add(1 + 2, 3 ));
+</pre>
+    </div>
+</body>
+
+</html>
