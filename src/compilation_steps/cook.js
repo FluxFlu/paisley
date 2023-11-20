@@ -34,7 +34,7 @@ function cook(filename, file) {
             } catch (e) {
                 firstToken.character += 2;
                 lastToken.character--;
-                logError("failure_toCook", firstToken, lastToken, e);
+                logError("failure_to_cook", firstToken, lastToken, e);
             }
         }
     }

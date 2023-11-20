@@ -40,8 +40,12 @@ function handleFlag(compile, filename, line) {
     }
     switch (fn) {
         case "define": {
-            const name = values[1] || values[0];
-            definitions[filename][name[0].value] = { name: name[0].value, type: "Definition", from: line[0], to: values[0] };
+            const name = line[0];
+            if (values[0].length == 0) {
+                logError("no_define_value_provided", line[0], line[1]);
+                break;
+            }
+            definitions[filename][name.value] = { name: name.value, type: "Definition", from: line[0], to: values[0] };
             break;
         }
         case "macro": {
@@ -96,8 +100,9 @@ function handleFlag(compile, filename, line) {
             const allDeclarationNames = Object.keys(publicDeclarations[from]);
             const allDeclarations = Object.fromEntries(Object.entries(variables[from]).concat(Object.entries(definitions[from])));
             for (let i = 0; i < include.length; i++) {
-                if (!allDeclarationNames.includes(include[i]))
+                if (!allDeclarationNames.includes(include[i])) {
                     logError("include_nonreal_variable", from, include[i], copyLine, publicDeclarations[from], allDeclarations);
+                }
             }
 
             const fakeVariables = Object.fromEntries(Object.entries(publicDefinitions[from]).filter(e => include.includes(e[0])));

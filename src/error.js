@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const { getCompilerFlag, getRawFile, getCurrentFile, getOriginalFile } = require("../paisley");
+const { getCompilerFlag, getRawFile, getCurrentFile, getOriginalFile, setErrorLogged, logCompilerError } = require("../paisley");
 const { traverseDir } = require("./error_utils/fileUtils");
 const { spellCheck } = require("./error_utils/spellCheck");
 
@@ -142,14 +142,14 @@ for (let errorSubDir of errorDir) {
     }
 }
 
-let wasErrorLogged = false;
-const getErrorLogged = () => wasErrorLogged;
-
 function logError(error, ...args) {
     currentError = error;
+    if (!errors[error]) {
+        logCompilerError("invalid_error", error);
+    }
     const errorText = errors[error].apply(null, args);
     console.error(Color.darkRed + "Error[" + error + "]: " + Color.reset + errorText[1] + "\n# " + path.normalize(getCurrentFile()) + errorText[2] + "\n\n" + errorText[3]);
-    wasErrorLogged = true;
+    setErrorLogged();
     if (getCompilerFlag("throw-for-errors") == "true")
         throw error;
     if (errorText[0]) {
@@ -161,6 +161,5 @@ function logError(error, ...args) {
 module.exports = {
     Color,
     logError,
-    space, constructError, constructLineCheck, surroundingBlock, lastRealLine, insertLine, replaceLine,
-    getErrorLogged
+    space, constructError, constructLineCheck, surroundingBlock, lastRealLine, insertLine, replaceLine
 };

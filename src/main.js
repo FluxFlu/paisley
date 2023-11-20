@@ -1,9 +1,8 @@
 const fs = require("node:fs");
 const path = require("node:path");
 
-const { getCompilerFlag, FILE_EXTENSION, throwUsageError, setCompilerFlag, writeFile } = require("../paisley");
+const { getCompilerFlag, FILE_EXTENSION, logUsageError, setCompilerFlag, writeFile, getErrorLogged } = require("../paisley");
 const { compile } = require("./compile");
-const { getErrorLogged } = require("./error");
 
 function printFileLocation(fileLocation) {
     console.log("File Path:\x1b[1;32m " + path.join(__dirname, fileLocation) + "\x1b[0;37m\n");
@@ -28,7 +27,7 @@ function main() {
     for (let i = 0; i < args.length; i += 2) setCompilerFlag(args[i].slice(2), args[i + 1]);
 
     if (!filename || filename[0] == "-" || filename.slice(filename.lastIndexOf(".")) !== FILE_EXTENSION && getCompilerFlag("use-abnormal-filenames") !== "true")
-        throwUsageError("invalid_filename", filename);
+        logUsageError("invalid_filename", filename);
 
     let file = compile(filename);
 

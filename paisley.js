@@ -59,10 +59,19 @@ function setRawFile(filename, data) {
     fileData.rawText[filename] = data;
 }
 
+let errorLogged = false;
+
+function getErrorLogged() {
+    return errorLogged;
+}
+
+function setErrorLogged() {
+    errorLogged = true;
+}
+
 const FILE_EXTENSION = ".sly";
 
 const fs = require("node:fs");
-const { getErrorLogged } = require("./src/error");
 
 const note = "\x1b[1;29mNote: \x1b[0m";
 const usageErrors = {
@@ -76,11 +85,25 @@ const usageErrors = {
     ],
 };
 
-function throwUsageError(error, ...args) {
+function logUsageError(error, ...args) {
     console.error("\x1b[1;31mUsageError[" + error + "]: \x1b[0m" + usageErrors[error].apply(null, args).join("\n\n") + "\n\nAborting...\n");
     if (getCompilerFlag("throw-for-errors") == "true")
         throw error;
     process.exit(1);
+}
+const compilerErrors = {
+    "invalid_error": errorTag => [
+        `Attempted to throw invalid error "${errorTag}".`,
+    ],
+};
+
+const reportErrorLink = "https://github.com/FluxFlu/paisley/issues";
+
+function logCompilerError(error, ...args) {
+    console.error("\x1b[1;31mCompilerError[" + error + "]: \x1b[0m" + compilerErrors[error].apply(null, args).join("\n\n") + "\n\n" + note + `Please report this error at ${reportErrorLink}` + "\n\nAborting...\n");
+    // if (getCompilerFlag("throw-for-errors") == "true")
+    throw error;
+    // process.exit(1);
 }
 
 function writeFile(name, text) {
@@ -88,7 +111,16 @@ function writeFile(name, text) {
     fs.writeFileSync(name, text);
 }
 
-module.exports = { FILE_EXTENSION, getCompilerFlag, setCompilerFlag, getCurrentFile, setCurrentFile, getOriginalFile, getRawFile, setRawFile, throwUsageError, writeFile };
+module.exports = {
+    FILE_EXTENSION,
+    getCompilerFlag, setCompilerFlag,
+    getCurrentFile, setCurrentFile,
+    getOriginalFile,
+    getRawFile, setRawFile,
+    getErrorLogged, setErrorLogged,
+    logUsageError, logCompilerError,
+    writeFile
+};
 if (require.main == module) {
     const { main } = require("./src/main");
 

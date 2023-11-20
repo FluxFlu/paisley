@@ -30,5 +30,8 @@
   "homepage": "https://github.com/FluxFlu/paisley#readme",
   "devDependencies": {
     "eslint": "^8.54.0"
+  },
+  "dependencies": {
+    "paisley": "^1.0.0"
   }
 }

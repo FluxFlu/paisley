@@ -201,9 +201,20 @@ function Tokenize(filename, string) {
                 currentToken += string[i];
                 characterOffset++;
             }
+            if (!string[i]) {
+                logError("terminate_while_regex", { value: currentToken, line: lineBreaks, character });
+            }
             currentToken += "/";
+            i++;
+            while (string[i] && string[i].match(/[a-z]/)) {
+                currentToken += string[i];
+                characterOffset++;
+                i++;
+            }
 
             let outToken = token("RegExp", currentToken, lineBreaks, character);
+
+            console.log(outToken);
 
             try {
                 eval(currentToken);

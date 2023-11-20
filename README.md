@@ -28,6 +28,12 @@ Paisley uses a clean, c-style syntax for writing javascript. Here is a simple ex
 console.log(add(constant, 200)); // Logs "500"
 ```
 
+# Errors
+
+Paisley values highly readable error messages.
+
+This allow users to catch mistakes at compile-time instead of runtime in a manner that is easier to debug.
+
 # Documentation
 Paisley's documentation is included with the compiler, and can be located using `paisley --docs`.
 
