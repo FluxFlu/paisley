@@ -33,4 +33,4 @@ Paisley's documentation is included with the compiler, and can be located using 
 
 # Licensing
 
-Paisley is licensed under the GPL-3.0. A copy should be included with the compiler, and can be located using `paisley --license`.
+Paisley is licensed under the [GPL-3.0](https://github.com/FluxFlu/paisley/blob/main/LICENSE-GPL). A copy is included with the compiler, and can be located using `paisley --license`.

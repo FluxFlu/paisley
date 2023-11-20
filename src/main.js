@@ -1,7 +1,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 
-const { getCompilerFlag, FILE_EXTENSION, throwUsageError, setCompilerFlag } = require("../paisley");
+const { getCompilerFlag, FILE_EXTENSION, throwUsageError, setCompilerFlag, writeFile } = require("../paisley");
 const { compile } = require("./compile");
 const { getErrorLogged } = require("./error");
 
@@ -35,10 +35,9 @@ function main() {
     // Add in shebangs
     if (getCompilerFlag("make-script") == "true" && !file.match(/^#!(.*)/gm)) {
         switch (getCompilerFlag("type")) {
-            case "node": {
+            case "node":
                 file = "#!/usr/bin/env node\n'" + file;
                 break;
-            }
         }
     }
 
@@ -49,7 +48,7 @@ function main() {
         process.exit(1);
     }
 
-    fs.writeFileSync(outfile, file);
+    writeFile(outfile, file);
 
     // chmod +x
     if (getCompilerFlag("make-script") == "true")
@@ -58,4 +57,4 @@ function main() {
     return 0;
 }
 
-module.exports = { main }
+module.exports = { main };

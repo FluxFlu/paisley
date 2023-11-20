@@ -4,22 +4,22 @@ const { token } = require("./tokenizer");
 
 function endFormat(value) {
     switch (typeof value) {
-    case "string": {
-        return `"${value.replaceAll("\"", "\\\"")}"`;
-    }
-    case "object": {
-        if (value instanceof Array) {
-            return "[" + value.map(e => endFormat(e)).join(",") + "]";
+        case "string": {
+            return `"${value.replaceAll("\"", "\\\"")}"`;
         }
-        const obj = {...value};
-        return "{" + Object.keys(obj).map(key => endFormat(key) + ":" + endFormat(obj[key])).join(",") + "}";
-    }
-    case "bigint": {
-        return String(value) + "n";
-    }
-    default: {
-        return String(value);
-    }
+        case "object": {
+            if (value instanceof Array) {
+                return "[" + value.map(e => endFormat(e)).join(",") + "]";
+            }
+            const obj = { ...value };
+            return "{" + Object.keys(obj).map(key => endFormat(key) + ":" + endFormat(obj[key])).join(",") + "}";
+        }
+        case "bigint": {
+            return String(value) + "n";
+        }
+        default: {
+            return String(value);
+        }
 
     }
 }

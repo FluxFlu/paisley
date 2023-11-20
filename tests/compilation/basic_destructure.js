@@ -1,4 +1,3 @@
-
 const assert = require("node:assert/strict");
 
 const { token } = require("../../src/compilation_steps/tokenizer");
@@ -29,9 +28,9 @@ module.exports = () => {
         ],
         0,
         addVariable
-    )
+    );
     assert.deepStrictEqual(
-        variables.map(e => { return { type: e.type, value: e.value } }),
+        variables.map(e => { return { type: e.type, value: e.value }; }),
         [
             {
                 type: "Identifier",
@@ -42,5 +41,5 @@ module.exports = () => {
                 value: "40",
             }
         ]
-    )
-}
+    );
+};

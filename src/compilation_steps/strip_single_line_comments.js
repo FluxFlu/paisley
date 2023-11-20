@@ -17,4 +17,4 @@ function stripSingleLineComments(file) {
     return postCommentStrip;
 }
 
-module.exports = { stripSingleLineComments }
+module.exports = { stripSingleLineComments };

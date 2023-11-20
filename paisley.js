@@ -62,6 +62,7 @@ function setRawFile(filename, data) {
 const FILE_EXTENSION = ".sly";
 
 const fs = require("node:fs");
+const { getErrorLogged } = require("./src/error");
 
 const note = "\x1b[1;29mNote: \x1b[0m";
 const usageErrors = {
