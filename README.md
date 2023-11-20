@@ -34,6 +34,10 @@ Paisley values highly readable error messages.
 
 This allow users to catch mistakes at compile-time instead of runtime in a manner that is easier to debug.
 
+![Error Message Example 1](https://raw.githubusercontent.com/FluxFlu/paisley/main/showcase/error_message0.png)
+![Error Message Example 2](https://raw.githubusercontent.com/FluxFlu/paisley/main/showcase/error_message1.png)
+![Error Message Example 3](https://raw.githubusercontent.com/FluxFlu/paisley/main/showcase/error_message2.png)
+
 # Documentation
 Paisley's documentation is included with the compiler, and can be located using `paisley --docs`.
 
