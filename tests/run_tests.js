@@ -10,6 +10,11 @@ function pad(str, len) {
     return str;
 }
 
+const print = console.log;
+console.log = () => {};
+console.error = () => {};
+console.trace = () => {};
+
 fs.readdirSync(__dirname).forEach(dir => {
     if (fs.statSync(path.join(__dirname, dir)).isDirectory()) {
         const files = fs.readdirSync(path.join(__dirname, dir));
@@ -18,9 +23,9 @@ fs.readdirSync(__dirname).forEach(dir => {
             file = file.slice(0, -3);
             try {
                 require("./" + path.normalize(path.join(dir, file)).replaceAll(path.win32.sep, path.posix.sep))();
-                console.log(Color.darkGreen + `[TEST ${pad(file.toUpperCase(), padLen)}   PASSED]` + Color.reset);
+                print(Color.darkGreen + `[TEST ${pad(file.toUpperCase(), padLen)}   PASSED]` + Color.reset);
             } catch (e) {
-                console.error(Color.darkRed + `[TEST ${pad(file.toUpperCase(), padLen)}   FAILED]` + Color.reset);
+                print(Color.darkRed + `[TEST ${pad(file.toUpperCase(), padLen)}   FAILED]` + Color.reset);
                 throw e;
             }
         });
