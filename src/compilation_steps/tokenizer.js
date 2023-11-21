@@ -85,12 +85,13 @@ function Tokenize(filename, string) {
             }
             if (!string[i]) {
                 logError("terminate_while_string", { value: currentToken, line: lineBreaks, character });
+            } else if (string[i] == literal) {
+                tokens.push(token("String", currentToken + literal, lineBreaks, ++character));
+                literal = null;
+            } else {
+                i--;
             }
             character += characterOffset;
-            if (string[i] == literal)
-                tokens.push(token("String", currentToken + literal, lineBreaks, ++character));
-            else
-                i--;
             continue;
         } else if (literal == "`" && !templateBrack && string[i] == "}") {
             let characterOffset = 1;
@@ -220,13 +221,13 @@ function Tokenize(filename, string) {
 
             let outToken = token("RegExp", currentToken, lineBreaks, character);
 
-            console.log(outToken);
-
             try {
                 eval(currentToken);
             } catch (error) {
                 logError("invalid_regex", outToken, error);
             }
+
+            i--;
 
             tokens.push(outToken);
             character += characterOffset;

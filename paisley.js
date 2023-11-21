@@ -129,7 +129,7 @@ function logUsageError(error, ...args) {
 }
 const compilerErrors = {
     "generic": () => [
-        `An error in the compiler has occured.`
+        "An error in the compiler has occured."
     ],
     "invalid_error": errorTag => [
         `Attempted to throw invalid error "${errorTag}".`,

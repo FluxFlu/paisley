@@ -138,7 +138,7 @@ const errorDir = fs.readdirSync(path.join(__dirname, "errors"));
 
 function readErrorList() {
     for (let errorSubDir of errorDir) {
-        if (path.extname(errorSubDir) == ".json") return;
+        if (path.extname(errorSubDir) == ".json") continue;
         const errorNames = fs.readdirSync(path.join(__dirname, "errors", errorSubDir));
         for (let errorName of errorNames) {
             if (path.extname(errorName) == ".js")
@@ -156,6 +156,7 @@ function logError(error, ...args) {
     currentError = error;
     if (!errors[error]) {
         logCompilerError("invalid_error", null, error);
+        return;
     }
     const errorText = errors[error].apply(null, args);
     console.error(Color.darkRed + "Error[" + error + "]: " + Color.reset + errorText[1] + "\n# " + path.normalize(getCurrentFile()) + errorText[2] + "\n\n" + errorText[3]);
