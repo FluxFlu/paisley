@@ -19,21 +19,13 @@ function finalize(filename, file) {
         const token = file[i];
 
         if (validTypes[token.type]) final += token.value;
-        // if (token.type == "RegExp") {
-        //     console.log(file[i + 1]);
-        // }
         if (
             token.value == "\n" &&
             final &&
             file[i + 1] &&
             (
-                (
-                    !terminators[final.at(-1)] &&
-                    !lineStart[file[i + 1].value]
-                )
-                // ||
-                // final.at(-1) == ')' ||
-                // file[i + 1].value == '('
+                !terminators[final.at(-1)] &&
+                !lineStart[file[i + 1].value]
             )
         )
             final += "\n";

@@ -54,7 +54,7 @@ function main() {
         }
         process.exit(0);
     } else if (args.includes("--license")) {
-        printFileLocation("../LICENSE-GPL");
+        printFileLocation("../LICENSE");
         process.exit(0);
     } else if (args.includes("--help") || args.length == 0) {
         console.log("Usage: \x1b[1;32mpaisley [file" + FILE_EXTENSION + "] [options]\x1b[0;0m\n\nLocate documentation with \x1b[1;32mpaisley --docs\x1b[0;0m\n\nLocate license with \x1b[1;32mpaisley --license\x1b[0;0m.");
