@@ -1,6 +1,6 @@
 {
   "name": "paisley",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A grindy javascript precompiler. Javascript the way you want it.",
   "main": "paisley",
   "directories": {
