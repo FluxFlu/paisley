@@ -32,6 +32,6 @@
     "eslint": "^8.54.0"
   },
   "dependencies": {
-    "paisley": "^1.0.0"
+    "paisley": "^1.1.0"
   }
 }

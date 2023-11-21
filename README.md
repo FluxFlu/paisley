@@ -1,5 +1,5 @@
-# The Paisley Precompiler
-> A grindy javascript precompiler created to provide zero-cost abstractions and user convenience.
+# The Paisley Compiler
+> A grindy javascript precompiler created to provide zero-cost abstractions and added user convenience.
 
 ![Endpoint Badge](https://img.shields.io/npm/dt/paisley)
 ![Static Badge](https://img.shields.io/badge/License-GPL--3.0-blue)
