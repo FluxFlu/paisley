@@ -121,13 +121,16 @@ const usageErrors = {
 
 function logUsageError(error, ...args) {
     if (!usageErrors[error])
-        logCompilerError("invalid_error", error);
+        logCompilerError("invalid_error", null, error);
     console.error("\x1b[1;31mUsageError[" + error + "]: \x1b[0m" + usageErrors[error].apply(null, args).join("\n\n") + "\n\nAborting...\n");
     if (getCompilerFlag("throw-for-errors") == "true")
         throw error;
     process.exit(1);
 }
 const compilerErrors = {
+    "generic": () => [
+        `An error in the compiler has occured.`
+    ],
     "invalid_error": errorTag => [
         `Attempted to throw invalid error "${errorTag}".`,
     ],
@@ -135,13 +138,15 @@ const compilerErrors = {
 
 const reportErrorLink = "https://github.com/FluxFlu/paisley/issues";
 
-function logCompilerError(error, ...args) {
+function logCompilerError(error, originalThrow, ...args) {
     console.error("\x1b[1;31mCompilerError[" + error + "]: \x1b[0m" + compilerErrors[error].apply(null, args).join("\n\n") + "\n\n" + note + `Please report this error at ${reportErrorLink}`);
     // if (getCompilerFlag("throw-for-errors") == "true")
-    console.trace();
+    // console.trace();
     console.log("\nAborting...\n");
-    // throw error;
-    process.exit(1);
+    if (originalThrow)
+        throw originalThrow;
+    else
+        process.exit(1);
 }
 
 const fs = require("node:fs");
@@ -163,6 +168,9 @@ module.exports = {
 
 if (require.main == module) {
     const { main } = require("./src/main");
-
-    process.exit(main());
+    try {
+        process.exit(main());
+    } catch (e) {
+        logCompilerError("generic", e);
+    }
 }

@@ -6,7 +6,7 @@ const { finalize } = require("./compilation_steps/final");
 const { handleFlag, definitions, publicDefinitions } = require("./compilation_steps/flag");
 const { handleDefinitions } = require("./compilation_steps/sub_definitions");
 const { Tokenize, token } = require("./compilation_steps/tokenizer");
-const { setCurrentFile, setRawFile, throwUsageError } = require("../paisley");
+const { setCurrentFile, setRawFile, logUsageError } = require("../paisley");
 const { logError } = require("./error");
 const { stripSingleLineComments } = require("./compilation_steps/strip_single_line_comments");
 
@@ -21,7 +21,7 @@ function compile(filename, requireValues) {
             logError("required_file_doesnt_exist", filename, requireValues[0]);
             return "";
         }
-        throwUsageError("entry_file_doesnt_exist", filename);
+        logUsageError("entry_file_doesnt_exist", filename);
     }
 
     originalFile = originalFile
