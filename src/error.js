@@ -1,7 +1,7 @@
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 
-const { getCompilerFlag, getRawFile, getCurrentFile, getOriginalFile, setErrorLogged, logCompilerError } = require("../paisley");
+const { getCompilerFlag, getRawFile, getCurrentFile, getOriginalFile, setErrorLogged, logCompilerError, printAborting } = require("../paisley");
 const { traverseDir } = require("./error_utils/fileUtils");
 const { spellCheck } = require("./error_utils/spellCheck");
 
@@ -135,25 +135,35 @@ const replaceLines = (block, replaceWith) => {
 const errors = {};
 
 const errorDir = fs.readdirSync(path.join(__dirname, "errors"));
-for (let errorSubDir of errorDir) {
-    const errorNames = fs.readdirSync(path.join(__dirname, "errors", errorSubDir));
-    for (let errorName of errorNames) {
-        errors[errorName.slice(0, -3)] = eval(fs.readFileSync(path.join(__dirname, "errors", errorSubDir, errorName), "utf-8"));
+
+function readErrorList() {
+    for (let errorSubDir of errorDir) {
+        if (path.extname(errorSubDir) == ".json") return;
+        const errorNames = fs.readdirSync(path.join(__dirname, "errors", errorSubDir));
+        for (let errorName of errorNames) {
+            if (path.extname(errorName) == ".js")
+                errors[errorName.slice(0, -3)] = eval(fs.readFileSync(path.join(__dirname, "errors", errorSubDir, errorName), "utf-8"));
+        }
     }
 }
 
+let errorListRead = false;
 function logError(error, ...args) {
+    if (!errorListRead) {
+        readErrorList();
+        errorListRead = true;
+    }
     currentError = error;
     if (!errors[error]) {
         logCompilerError("invalid_error", error);
     }
     const errorText = errors[error].apply(null, args);
     console.error(Color.darkRed + "Error[" + error + "]: " + Color.reset + errorText[1] + "\n# " + path.normalize(getCurrentFile()) + errorText[2] + "\n\n" + errorText[3]);
-    setErrorLogged();
+    setErrorLogged(error);
     if (getCompilerFlag("throw-for-errors") == "true")
         throw error;
     if (errorText[0]) {
-        console.error("Aborting...\n");
+        printAborting();
         process.exit(1);
     }
 }
@@ -161,5 +171,6 @@ function logError(error, ...args) {
 module.exports = {
     Color,
     logError,
+    readErrorList,
     space, constructError, constructLineCheck, surroundingBlock, lastRealLine, insertLine, replaceLine
 };

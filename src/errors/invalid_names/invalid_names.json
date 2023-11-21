@@ -1,0 +1,7 @@
+{
+    "early_fn_name": "function_hoisting",
+    "include_nonreal_variable": [
+        "require",
+        "export"
+    ]
+}

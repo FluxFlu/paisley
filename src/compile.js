@@ -49,7 +49,7 @@ function compile(filename, requireValues) {
                 flag.push(file.splice(i, 1)[0]);
             }
             const flagOut = handleFlag(compile, filename, flag, i);
-            file.splice(back, 0, token(flagOut.is_real ? "PostFlag" : "CompilerValue", flagOut.value, flagOut.line, flagOut.character));
+            file.splice(back, 0, token(flagOut.isReal ? "PostFlag" : "CompilerValue", flagOut.value, flagOut.line, flagOut.character));
         }
     }
 

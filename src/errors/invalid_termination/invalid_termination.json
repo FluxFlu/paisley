@@ -1,0 +1,6 @@
+{
+    "terminate_while_cooking": "cook",
+    "terminate_while_regex": "regex",
+    "terminate_while_string": "string",
+    "unbalanced_lambda_braces": "arrow_function_notation"
+}

@@ -64,6 +64,10 @@ function spellCheck(listOfValidValues, value) {
         for (let i = 0; i < bigger.length; i++) {
             if (errors > +getCompilerFlag("error-threshold")) break;
             if (smaller[i] == bigger[i]) continue;
+            if (!smaller[i]) {
+                errors++;
+                continue;
+            }
             
             if (smaller[i + 1] == bigger[i + 1] && smaller[i + 2] == bigger[i + 2]) {
                 errors++;

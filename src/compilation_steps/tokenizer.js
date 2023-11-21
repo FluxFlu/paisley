@@ -69,7 +69,7 @@ function Tokenize(filename, string) {
             const startPos = i;
             let characterOffset = 1;
             i++;
-            while (!(string[i] === literal && string[i - 1] !== "\\") && string[i]) {
+            while (string[i] && !(string[i] === literal && string[i - 1] !== "\\")) {
                 characterOffset++;
                 if (literal == "`" && string[i] == "$" && string[i + 1] == "{") {
                     if (i - 1 != startPos) {
@@ -82,6 +82,9 @@ function Tokenize(filename, string) {
                 }
                 currentToken += string[i];
                 i++;
+            }
+            if (!string[i]) {
+                logError("terminate_while_string", { value: currentToken, line: lineBreaks, character });
             }
             character += characterOffset;
             if (string[i] == literal)
@@ -115,6 +118,9 @@ function Tokenize(filename, string) {
                 }
                 currentToken += string[i];
                 i++;
+            }
+            if (!string[i]) {
+                logError("terminate_while_string", { value: currentToken, line: lineBreaks, character });
             }
             if (string[i] == "`")
                 tokens.push(token("String", currentToken + "`", lineBreaks, ++character));
@@ -150,7 +156,7 @@ function Tokenize(filename, string) {
                 characterOffset++;
                 dotCheck = true;
             }
-            while (string[i].match(/[0-9]/) || string[i] == "." && !dotCheck) {
+            while (string[i] && string[i].match(/[0-9]/) || string[i] == "." && !dotCheck) {
                 if (string[i] == ".")
                     dotCheck = true;
                 currentToken += string[i];
@@ -231,7 +237,7 @@ function Tokenize(filename, string) {
             if (string[i] == "#" && (!tokens.length || tokens.at(-1).type == "LineBreak")) {
                 let j = i + 1;
                 let str = "";
-                while (string[j].match(/[A-Za-z_]/)) {
+                while (string[j] && string[j].match(/[A-Za-z_]/)) {
                     str += string[j];
                     j++;
                 }

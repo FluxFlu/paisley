@@ -1,24 +1,63 @@
 const fs = require("node:fs");
 const path = require("node:path");
 
-const { getCompilerFlag, FILE_EXTENSION, logUsageError, setCompilerFlag, writeFile, getErrorLogged } = require("../paisley");
+const { getCompilerFlag, FILE_EXTENSION, logUsageError, setCompilerFlag, writeFile, getErrorLogged, printAborting } = require("../paisley");
 const { compile } = require("./compile");
 
 function printFileLocation(fileLocation) {
-    console.log("File Path:\x1b[1;32m " + path.join(__dirname, fileLocation) + "\x1b[0;37m\n");
-    console.log("URL:      \x1b[1;32m " + path.join("file://", __dirname, fileLocation) + "\x1b[0;37m\n");
-    process.exit(0);
+    console.log(" - File Path:\x1b[1;32m " + path.join(__dirname, fileLocation) + "\x1b[0;0m\n");
+    console.log(" - URL:      \x1b[1;32m " + path.join("file://", __dirname, fileLocation) + "\x1b[0;0m\n");
+}
+
+const strMap = JSON.parse(fs.readFileSync(path.join(__dirname, "/errors/error_docs.json")));
+function printDocLink(docObj) {
+    if (typeof docObj == "string") {
+        docObj = strMap[docObj];
+        console.log("\n- " + docObj.name + ":");
+        if (docObj.url.includes("http")) {
+            console.log(" - URL:      \x1b[1;32m " + docObj.url + "\x1b[0;0m\n");
+        } else {
+            printFileLocation(path.join("../docs", docObj.url + ".html"));
+        }
+    } else {
+        docObj.forEach(printDocLink);
+    }
+}
+
+function readDocsDirectory() {
+    const baseDir = fs.readdirSync(path.join(__dirname, "/errors"));
+    const ret = {};
+    baseDir.forEach(dir => {
+        if (path.extname(dir) == ".json") return;
+        const obj = JSON.parse(fs.readFileSync(path.join(__dirname, "/errors", dir, dir + ".json"), "utf-8"));
+        Object.keys(obj).forEach(key => {
+            ret[key] = obj[key];
+        });
+    });
+    return ret;
 }
 
 function main() {
     const args = process.argv.slice(2);
 
     if (args.includes("--docs")) {
-        printFileLocation("../docs/index.html");
+        while (args[0] !== "--docs")
+            args.shift();
+        args.shift();
+        const errorLocations = readDocsDirectory();
+        if (errorLocations[args[0]]) {
+            console.log("Potentially relevant documentation for error \x1b[1;31m" + args[0] + "\x1b[0;m:");
+            printDocLink(errorLocations[args[0]]);
+        } else {
+            printFileLocation("../docs/index.html");
+            // console.log("Use \x1b[1;32mpaisley --docs <errorName>\x1b[0;0m to see relevant documentation for any given error.");
+        }
+        process.exit(0);
     } else if (args.includes("--license")) {
         printFileLocation("../LICENSE-GPL");
+        process.exit(0);
     } else if (args.includes("--help") || args.length == 0) {
-        console.log("Usage: \x1b[1;32mpaisley [file" + FILE_EXTENSION + "] [options]\x1b[0;37m\n\nLocate documentation with \x1b[1;32mpaisley --docs\x1b[0;37m.\n\nLocate license with \x1b[1;32mpaisley --license\x1b[0;37m.");
+        console.log("Usage: \x1b[1;32mpaisley [file" + FILE_EXTENSION + "] [options]\x1b[0;0m\n\nLocate documentation with \x1b[1;32mpaisley --docs\x1b[0;0m\n\nLocate license with \x1b[1;32mpaisley --license\x1b[0;0m.");
         process.exit(0);
     }
 
@@ -43,7 +82,7 @@ function main() {
     const outfile = filename.slice(0, filename.lastIndexOf(".")) + ".js";
 
     if (getErrorLogged()) {
-        console.error("Aborting...\n");
+        printAborting();
         process.exit(1);
     }
 

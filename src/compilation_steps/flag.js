@@ -1,6 +1,7 @@
+
 const { getCompilerFlag, writeFile, setCurrentFile, FILE_EXTENSION } = require("../../paisley");
-const { variables } = require("./tokenizer");
 const { logError } = require("../error");
+const { variables } = require("./tokenizer");
 const { validTypes } = require("./final");
 
 
@@ -12,6 +13,10 @@ const publicDeclarations = {};
 function handleFlag(compile, filename, line) {
     const copyLine = line.map(e => e.copy());
     line.shift();
+    if (!line[0]) {
+        logError("no_directive", copyLine[0]);
+        return { value: 0, final: "" };
+    }
     const fn = line.shift().value;
     let realValue = true;
     let flag = line.map(e => e.value);
@@ -41,6 +46,10 @@ function handleFlag(compile, filename, line) {
     switch (fn) {
         case "define": {
             const name = line[0];
+            if (!line[0]) {
+                logError("no_define_name_provided", copyLine[1]);
+                break;
+            }
             if (values[0].length == 0) {
                 logError("no_define_value_provided", line[0], line[1]);
                 break;

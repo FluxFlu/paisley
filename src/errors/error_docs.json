@@ -1,0 +1,49 @@
+{
+    "function_hoisting": {
+        "name": "Documentation for Function Hoisting in Paisley",
+        "url": "pages/function_hoisting"
+    },
+    "cook": {
+        "name": "Documentation for Cooking",
+        "url": "pages/cook"
+    },
+
+    "regex": {
+        "name": "Documentation for Regular Expressions",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions"
+    },
+    "string": {
+        "name": "Documentation for Strings",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String"
+    },
+    "arrow_function_notation": {
+        "name":"Documentation for Arrow Function Notation",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions"
+    },
+
+    "directives": {
+        "name": "Directives in Paisley",
+        "url": "pages/directives"
+    },
+
+    "require": {
+        "name": "Documentation for the Require directive",
+        "url": "pages/directives/require"
+    },
+    "export": {
+        "name": "Documentation for the Export directive",
+        "url": "pages/directives/export"
+    },
+    "define": {
+        "name": "Documentation for the Define directive",
+        "url": "pages/directives/define"
+    },
+    "macro": {
+        "name": "Documentation for the Macro directive",
+        "url": "pages/directives/macro"
+    },
+    "procedure": {
+        "name": "Documentation for the Procedure directive",
+        "url": "pages/directives/procedure"
+    }
+}
