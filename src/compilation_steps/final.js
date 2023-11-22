@@ -3,7 +3,6 @@ const validTypes = { Identifier: true, RegExp: true, Number: true, BigInt: true,
 const terminators = {
     ";": true,
     "\n": true,
-    "}": true,
     "{": true,
 };
 
