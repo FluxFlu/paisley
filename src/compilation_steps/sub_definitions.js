@@ -50,7 +50,7 @@ function handleDefinitions(filename, file) {
     const macros = Object.values(definitions[filename]).filter(e => e.type == "Macro");
     for (let i = 0; i < file.length; i++) {
         const macro = tokenMatch(macros, file, i);
-        if (macro) {
+        if (macro && (!file[i - 1] || file[i - 1].value !== ".")) {
             if (file[i + 1].value !== "(") continue;
             file.splice(i, 2);
 
@@ -109,7 +109,7 @@ function handleDefinitions(filename, file) {
     const procedures = Object.values(definitions[filename]).filter(e => e.type == "Procedure");
     for (let i = 0; i < file.length; i++) {
         const procedure = tokenMatch(procedures, file, i);
-        if (procedure) {
+        if (procedure && (!file[i - 1] || file[i - 1].value !== ".")) {
             if (file[i + 1].value !== "(") continue;
             const firstToken = file[i];
             file.splice(i, 2);
