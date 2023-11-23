@@ -132,14 +132,14 @@ function Tokenize(filename, string) {
         } else if (
             string[i].match(/[0-9-.]/) &&
             (
-                string[i + 1].match(/[0-9]/) ||
+                string[i + 1].match(/[0-9_]/) ||
                 (
                     string[i] != "-" &&
                     string[i] != "."
                 ) ||
                 (
                     string[i] == "-" &&
-                    string[i + 1].match(/[0-9.]/)
+                    string[i + 1].match(/[0-9_.]/)
                 )
             )
         ) {
@@ -157,7 +157,7 @@ function Tokenize(filename, string) {
                 characterOffset++;
                 dotCheck = true;
             }
-            while (string[i] && string[i].match(/[0-9]/) || string[i] == "." && !dotCheck) {
+            while (string[i] && string[i].match(/[0-9_]/) || string[i] == "." && !dotCheck) {
                 if (string[i] == ".")
                     dotCheck = true;
                 currentToken += string[i];
