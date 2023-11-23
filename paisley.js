@@ -22,7 +22,8 @@ const compilerFlags = {
     "docs": null,
     "help": null,
 
-    "type": "node",
+    "type": "commonjs",
+
     "make-script": "false",
     "ignore-early-fn-name-check": "false",
     "use-abnormal-filenames": "false",
@@ -38,6 +39,8 @@ const compilerFlags = {
 function getCompilerFlag(i) { return compilerFlags[i]; }
 
 function setCompilerFlag(i, f) {
+    i = i.toLocaleLowerCase();
+    f = f.toLocaleLowerCase();
     if (!compilerFlags[i])
         logUsageError("invalid_compiler_flag", i);
     compilerFlags[i] = f;

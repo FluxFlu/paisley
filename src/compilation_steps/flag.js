@@ -54,21 +54,21 @@ function handleFlag(compile, filename, line) {
                 logError("no_define_value_provided", line[0], line[1]);
                 break;
             }
-            definitions[filename][name.value] = { name: name.value, type: "Definition", from: line[0], to: values[0] };
+            definitions[filename][name.value] = { value: name.value, type: "Definition", from: line[0], to: values[0] };
             break;
         }
         case "macro": {
             const name = line[0];
             const params = values[0].map(e => e.value).join("").split(",").map(e => e.trim());
             const code = values[1];
-            definitions[filename][name.value] = { name: name.value, type: "Macro", from: name, params, code };
+            definitions[filename][name.value] = { value: name.value, type: "Macro", from: name, params, code };
             break;
         }
         case "procedure": {
             const name = line[0];
             const param = values[0][0].value;
             const code = values[1];
-            definitions[filename][name.value] = { name: name.value, type: "Procedure", from: name, param, code };
+            definitions[filename][name.value] = { value: name.value, type: "Procedure", from: name, param, code };
             break;
         }
         case "export": {
@@ -77,8 +77,16 @@ function handleFlag(compile, filename, line) {
             const realVariables = Object.entries(variables[filename]).filter(e => flag.includes(e[1].value)).map(e => e[0]);
             if (realVariables.length) {
                 switch (getCompilerFlag("type")) {
-                    case "node": {
+                    case "commonjs": {
                         final += "module.exports = { ";
+                        let i = 0;
+                        while (i < realVariables.length - 1) final += realVariables[i++] + ", ";
+                        final += realVariables.at(-1);
+                        final += " }";
+                        break;
+                    }
+                    case "ecmascript": {
+                        final += "export { ";
                         let i = 0;
                         while (i < realVariables.length - 1) final += realVariables[i++] + ", ";
                         final += realVariables.at(-1);
@@ -87,7 +95,7 @@ function handleFlag(compile, filename, line) {
                     }
                 }
             }
-            publicDefinitions[filename] = Object.fromEntries(Object.entries(definitions[filename]).filter(e => flag.includes(e[1].name)));
+            publicDefinitions[filename] = Object.fromEntries(Object.entries(definitions[filename]).filter(e => flag.includes(e[1].value)));
             const out = {};
             Object.keys(definitions[filename]).forEach(key => out[key] = definitions[filename][key]);
             Object.keys(variables[filename]).forEach(key => out[key] = variables[filename][key]);
@@ -124,12 +132,20 @@ function handleFlag(compile, filename, line) {
 
             if (realVariables.length) {
                 switch (getCompilerFlag("type")) {
-                    case "node": {
+                    case "commonjs": {
                         final += "const { ";
                         let i = 0;
                         while (i < realVariables.length - 1) final += realVariables[i++] + ", ";
                         final += realVariables.at(-1);
                         final += " } = require(\"" + from.replaceAll(FILE_EXTENSION, ".js") + "\");";
+                        break;
+                    }
+                    case "ecmascript": {
+                        final += "import { ";
+                        let i = 0;
+                        while (i < realVariables.length - 1) final += realVariables[i++] + ", ";
+                        final += realVariables.at(-1);
+                        final += " } from \"" + from.replaceAll(FILE_EXTENSION, ".js") + "\"";
                         break;
                     }
                 }
@@ -141,17 +157,17 @@ function handleFlag(compile, filename, line) {
             realValue = false;
             break;
         }
-        case "with": {
-            switch (getCompilerFlag("type")) {
-                case "node": {
-                    final = "#!" + flag.slice(1, -1).join(" ")
-                        .replaceAll("/ ", "/")
-                        .replaceAll(" /", "/");
-                    break;
-                }
-            }
-            break;
-        }
+        // case "with": {
+        //     switch (getCompilerFlag("type")) {
+        //         case "commonjs": {
+        //             final = "#!" + flag.slice(1, -1).join(" ")
+        //                 .replaceAll("/ ", "/")
+        //                 .replaceAll(" /", "/");
+        //             break;
+        //         }
+        //     }
+        //     break;
+        // }
     }
 
     return { value: final, isReal: realValue };

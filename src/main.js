@@ -73,7 +73,7 @@ function main() {
     // Add in shebangs
     if (getCompilerFlag("make-script") == "true" && !file.match(/^#!(.*)/gm)) {
         switch (getCompilerFlag("type")) {
-            case "node":
+            case "commonjs":
                 file = "#!/usr/bin/env node\n'" + file;
                 break;
         }
