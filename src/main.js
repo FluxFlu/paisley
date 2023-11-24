@@ -1,7 +1,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 
-const { getCompilerFlag, FILE_EXTENSION, logUsageError, setCompilerFlag, writeFile, getErrorLogged, printAborting } = require("../paisley");
+const { getCompilerFlag, FILE_EXTENSION, logUsageError, setCompilerFlag, writeFile, getErrorLogged, printAborting, setOriginalFile } = require("../paisley");
 const { compile } = require("./compile");
 
 function printFileLocation(fileLocation) {
@@ -68,6 +68,7 @@ function main() {
     if (!filename || filename[0] == "-" || filename.slice(filename.lastIndexOf(".")) !== FILE_EXTENSION && getCompilerFlag("use-abnormal-filenames") !== "true")
         logUsageError("invalid_filename", filename);
 
+    setOriginalFile(filename);
     let file = compile(filename);
 
     // Add in shebangs

@@ -89,14 +89,17 @@ function quoteFormat(block) {
 }
 
 function lineFormat(startNumber, block) {
-    let str = "";
-    const arr = block.split("\n");
-    for (let i = 0; i < arr.length; i++) {
-        if (i) str += "\n";
-        if (!arr[i]) continue;
-        str += lineNum(startNumber + i) + arr[i];
+    block = block.split("\n");
+    let lineCount = 0;
+    let hasPrinted = false;
+    for (let i = 0; i < block.length; i++, lineCount++) {
+        if (block[i] || hasPrinted) {
+            block[i] = lineNum(startNumber + lineCount) + block[i];
+            hasPrinted = true;
+        } else
+            block.splice(i--, 1);
     }
-    return str;
+    return block.join("\n");
 }
 
 const insertLine = (block, line, toInsert) => {
@@ -141,10 +144,15 @@ function readErrorList() {
         if (path.extname(errorSubDir) == ".json") continue;
         const errorNames = fs.readdirSync(path.join(__dirname, "errors", errorSubDir));
         for (let errorName of errorNames) {
-            if (path.extname(errorName) == ".js")
+            if (path.extname(errorName) == ".js") {
                 errors[errorName.slice(0, -3)] = eval(fs.readFileSync(path.join(__dirname, "errors", errorSubDir, errorName), "utf-8"));
+            }
         }
     }
+}
+
+function formatPath(str) {
+    return "./" + path.normalize(str).replaceAll(path.win32.sep, path.posix.sep);
 }
 
 let errorListRead = false;
@@ -159,7 +167,7 @@ function logError(error, ...args) {
         return;
     }
     const errorText = errors[error].apply(null, args);
-    console.error(Color.darkRed + "Error[" + error + "]: " + Color.reset + errorText[1] + "\n# " + path.normalize(getCurrentFile()) + errorText[2] + "\n\n" + errorText[3]);
+    console.error(Color.darkRed + "Error[" + error + "]: " + Color.reset + errorText[1] + "\n# " + formatPath(getCurrentFile()) + errorText[2] + "\n\n" + errorText[3]);
     setErrorLogged(error);
     if (getCompilerFlag("throw-for-errors") == "true")
         throw error;

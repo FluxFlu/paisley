@@ -1,5 +1,5 @@
-
-const { getCompilerFlag, writeFile, setCurrentFile, FILE_EXTENSION } = require("../../paisley");
+const path = require("node:path");
+const { getCompilerFlag, writeFile, setCurrentFile, FILE_EXTENSION, getDirOf } = require("../../paisley");
 const { logError } = require("../error");
 const { variables } = require("./tokenizer");
 const { validTypes } = require("./final");
@@ -106,13 +106,19 @@ function handleFlag(compile, filename, line) {
         case "require": {
             const requires = flag.join("").split("from");
             const include = requires[0].slice(1, -1).split(",");
-            const from = requires[1].slice(1, -1);
+            const from = path.join(getDirOf(filename), requires[1].slice(1, -1));
 
             writeFile(from.replaceAll(FILE_EXTENSION, ".js"), compile(from, [copyLine]));
             setCurrentFile(filename);
 
-            if (publicDeclarations[from] == null)
+            if (!publicDeclarations[from])
                 publicDeclarations[from] = {};
+            if (!publicDefinitions[from])
+                publicDefinitions[from] = {};
+            if (!variables[from])
+                variables[from] = {};
+            if (!definitions[from])
+                definitions[from] = {};
 
             const allDeclarationNames = Object.keys(publicDeclarations[from]);
             const allDeclarations = Object.fromEntries(Object.entries(variables[from]).concat(Object.entries(definitions[from])));

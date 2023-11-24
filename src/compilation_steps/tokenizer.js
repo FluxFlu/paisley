@@ -34,7 +34,6 @@ function Tokenize(filename, string) {
     variables[filename] = {};
     for (let i = 0; i < string.length; i++) {
         if (string[i] == "\n") {
-            currentToken = "";
             lineBreaks++;
             character = 0;
             tokens.push(token("LineBreak", "\n", lineBreaks, 0));
@@ -122,11 +121,12 @@ function Tokenize(filename, string) {
             }
             if (!string[i]) {
                 logError("terminate_while_string", { value: currentToken, line: lineBreaks, character });
-            }
-            if (string[i] == "`")
+            } else if (string[i] == "`") {
                 tokens.push(token("String", currentToken + "`", lineBreaks, ++character));
-            else
+                literal = null;
+            } else {
                 i--;
+            }
             character += characterOffset;
             continue;
         } else if (
@@ -268,7 +268,7 @@ function Tokenize(filename, string) {
         character++;
     }
     for (let i = 0; i < tokens.length; i++) {
-        if (tokens[i].value == "let" || tokens[i].value == "const" || tokens[i].value == "var") {
+        if (tokens[i].value == "let" || tokens[i].value == "const" || tokens[i].value == "var" || tokens[i].value == "class") {
             let variableType = tokens[i].value;
             const addVariable = variableToken => {
                 if (variables[filename][variableToken.value])
@@ -276,6 +276,10 @@ function Tokenize(filename, string) {
                 variables[filename][variableToken.value] = token(variableType, variableToken.value, variableToken.line, variableToken.character);
             };
             i++;
+            if (variableType == "class") {
+                addVariable(tokens[i]);
+                continue;
+            }
             if (tokens[i].type == "Identifier") {
                 while (tokens[i].type == "Operator" && tokens[i].value == "," || tokens[i].type == "Identifier") {
                     if (tokens[i].type == "Identifier")

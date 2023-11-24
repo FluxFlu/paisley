@@ -1,8 +1,29 @@
 (filename, tokenList) => {
     const token = tokenList[0];
+
+    const originalFile = getRawFile(getCurrentFile());
+    const normalizedFilename = path.basename(filename);
+    const potentialFiles = traverseDir(path.dirname(getOriginalFile())).filter(e => e[0] == normalizedFilename).map(e => path.posix.normalize((e[1]).replaceAll(path.win32.sep, path.posix.sep)));
+    const format = surroundingBlock(originalFile, token.line);
+    const codeBlock = format[0];
+    const formattedLinePosition = format[1];
+    calcList(token.line);
+
     let nameToken;
     let i = tokenList.length;
     while (--i) {
+        if (i < 0) {
+            return [
+                true,
+                `Invalid file ${Color.red}\`${formatPath(filename)}\`${Color.reset}.`,
+                constructLineCheck(token),
+                constructError(
+                    lineFormat(token.line, codeBlock),
+                    emptyLine(),
+                    helpLine() + "The `require` directive necessitates use of the word \"from\" when including files."
+                )
+            ];
+        }
         if (tokenList[i].value == "from") {
             i++;
             nameToken = tokenList[i + 1];
@@ -11,28 +32,39 @@
     }
     let lastNameToken;
     while (++i) {
-        if (tokenList[i].value == "]") {
+        if (!tokenList[i]) {
+            return [
+                true,
+                `Invalid file ${Color.red}\`${formatPath(filename)}\`${Color.reset}.`,
+                constructLineCheck(token),
+                constructError(
+                    lineFormat(token.line, codeBlock),
+                    emptyLine(),
+                    helpLine() + "The `require` directive necessitates use of square braces [] surrounding the filename.",
+                    helpLine() + "Did you mean:",
+                    quoteFormat(replaceLine(codeBlock, formattedLinePosition, line => {
+                        line = line.split(" ");
+                        line[line.length - 1] = Color.green + "[" + Color.reset + line.at(-1) + Color.green + "]" + Color.reset;
+                        return line.join(" ");
+                    }))
+                )
+            ];
+        }
+        if (tokenList[i] && tokenList[i].value == "]") {
             lastNameToken = tokenList[i];
             break;
         }
     }
-    const originalFile = getRawFile(getCurrentFile());
-    const normalizedFilename = path.basename(filename);
-    const potentialFiles = traverseDir(path.dirname(getOriginalFile())).filter(e => e[0] == normalizedFilename).map(e => path.posix.normalize((e[1]).replaceAll(path.win32.sep, path.posix.sep)));
-    const format = surroundingBlock(originalFile, token.line);
-    const codeBlock = format[0];
-    const formattedLinePosition = format[1];
-    calcList(token.line);
     return [
-        false,
-        `Invalid file ${Color.red}\`${filename}\`${Color.reset}.`,
+        true,
+        `Invalid file ${Color.red}\`${formatPath(filename)}\`${Color.reset}.`,
         constructLineCheck(token),
         constructError(
             insertLineFormat(token.line, codeBlock, formattedLinePosition, space(nameToken.character, " ") + Color.red + space(lastNameToken.character - nameToken.character, "^") + " File doesn't exist." + Color.reset),
             emptyLine(),
             potentialFiles?.length ?
                 helpLine() + "Did you mean any of the following?" + "\n" +
-            quoteLine() + potentialFiles.join("\n" + quoteLine())
+                quoteLine() + potentialFiles.join("\n" + quoteLine())
                 : "",
         )
     ];

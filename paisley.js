@@ -49,7 +49,9 @@ function setCompilerFlag(i, f) {
 
 const fileData = {
     currentFile: "",
+    entryPoint: "",
     rawText: {},
+    directories: {},
 };
 
 function getCurrentFile() {
@@ -64,12 +66,24 @@ function getOriginalFile() {
     return fileData.entryPoint;
 }
 
+function setOriginalFile(file) {
+    fileData.entryPoint = file;
+}
+
 function getRawFile(filename) {
     return fileData.rawText[filename];
 }
 
 function setRawFile(filename, data) {
     fileData.rawText[filename] = data;
+}
+
+function getDirOf(filename) {
+    return fileData.directories[filename];
+}
+
+function setDirOf(filename, directory) {
+    fileData.directories[filename] = directory;
 }
 
 let errorLogged = false;
@@ -143,8 +157,6 @@ const reportErrorLink = "https://github.com/FluxFlu/paisley/issues";
 
 function logCompilerError(error, originalThrow, ...args) {
     console.error("\x1b[1;31mCompilerError[" + error + "]: \x1b[0m" + compilerErrors[error].apply(null, args).join("\n\n") + "\n\n" + note + `Please report this error at ${reportErrorLink}`);
-    // if (getCompilerFlag("throw-for-errors") == "true")
-    // console.trace();
     console.log("\nAborting...\n");
     if (originalThrow)
         throw originalThrow;
@@ -162,8 +174,9 @@ module.exports = {
     FILE_EXTENSION,
     getCompilerFlag, setCompilerFlag,
     getCurrentFile, setCurrentFile,
-    getOriginalFile,
+    getOriginalFile, setOriginalFile,
     getRawFile, setRawFile,
+    getDirOf, setDirOf,
     getErrorLogged, setErrorLogged,
     logUsageError, logCompilerError, printAborting,
     writeFile,
