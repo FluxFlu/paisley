@@ -1,6 +1,7 @@
 const path = require("path");
 const { Color, space, constructError, constructLineCheck, surroundingBlock, lastRealLine, insertLine, replaceLine, formatPath, readErrorList, errors, parseErrorPosition } = require("../src/error");
-const { logCompilerError, FILE_EXTENSION } = require("../paisley");
+const { logCompilerError, FILE_EXTENSION, getCurrentFile } = require("../paisley");
+const { Tokenize } = require("../src/compilation_steps/tokenizer");
 
 const errMap = {
     "not_a_function": e => e.includes("is not a function"),
@@ -28,6 +29,7 @@ function logRuntimeError(context, error) {
         logCompilerError("invalid_error", null, error);
         return;
     }
+    context.tokenList = Tokenize(getCurrentFile(), context.originalFile);
     const errorText = errors[error](context);
     console.error(Color.darkRed + "RuntimeError[" + error + "]: " + Color.reset + errorText[1] + "\n# " + formatPath(path.relative(process.cwd(), path.normalize(module.parent.filename.replaceAll(".js", FILE_EXTENSION)))) + errorText[2] + "\n\n" + errorText[3]);
     if (errorText[0]) {

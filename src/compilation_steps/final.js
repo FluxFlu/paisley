@@ -33,15 +33,13 @@ const seperatedOperators = new Map([
 function finalize(filename, file) {
     let final = "";
     const locationMap = {};
-    const reverseLocationMap = {};
-    let line = 4;
+    let line = 3;
     let character = 0;
     for (let i = 0; i < file.length; i++) {
         const token = file[i];
 
         if (validTypes[token.type]) {
-            locationMap[token.line + ":" + token.character] = line + ":" + character;
-            reverseLocationMap[line + ":" + character] = token.line + ":" + token.character;
+            locationMap[line + ":" + character] = token.line + ":" + token.character;
             final += token.value;
             if (token.value.length)
                 character += token.value.length;
@@ -70,7 +68,7 @@ function finalize(filename, file) {
         }
     }
     if (getCompilerFlag("debug") == "true") {
-        final = `const paisley_debug_original_file = ${JSON.stringify(getRawFile(filename))}\nconst paisley_debug_token_list = ${JSON.stringify(file)}\nconst paisley_debug_location_map = ${JSON.stringify({ forward: locationMap, reverse: reverseLocationMap })}\nconst paisley_runtime_error = require(${JSON.stringify(path.join(__dirname, "../../runtime/paisley_runtime"))}).logRuntimeError\ntry{${final}}catch(e){paisley_runtime_error({originalFile:paisley_debug_original_file,tokenList:paisley_debug_token_list,locationMap:paisley_debug_location_map,error:e},e)}`;
+        final = `const paisley_debug_original_file = ${JSON.stringify(getRawFile(filename))}\nconst paisley_debug_location_map = ${JSON.stringify(locationMap)}\nconst paisley_runtime_error = require(${JSON.stringify(path.join(__dirname, "../../runtime/paisley_runtime"))}).logRuntimeError\ntry{${final}}catch(e){paisley_runtime_error({originalFile:paisley_debug_original_file,locationMap:paisley_debug_location_map,error:e},e)}`;
     }
     return final;
 }

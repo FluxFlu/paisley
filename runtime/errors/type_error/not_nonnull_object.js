@@ -1,7 +1,7 @@
 
 (context) => {
     const token = parseErrorPosition(context.error);
-    const tokenLocation = context.locationMap.reverse[token.line + ":" + token.character];
+    const tokenLocation = context.locationMap[token.line + ":" + token.character];
     if (!tokenLocation) {
         logCompilerError("generic", "Token location in original file does not exist", "Token location in original file does not exist");
     }
