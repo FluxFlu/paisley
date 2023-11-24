@@ -1,7 +1,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 
-const { getCompilerFlag, getRawFile, getCurrentFile, getOriginalFile, setErrorLogged, logCompilerError, printAborting } = require("../paisley");
+const { getCompilerFlag, getRawFile, getCurrentFile, getOriginalFile, setErrorLogged, logCompilerError, printAborting, getDirOf } = require("../paisley");
 const { traverseDir } = require("./error_utils/fileUtils");
 const { spellCheck } = require("./error_utils/spellCheck");
 
