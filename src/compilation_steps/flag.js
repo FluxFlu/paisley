@@ -78,19 +78,19 @@ function handleFlag(compile, filename, line) {
             if (realVariables.length) {
                 switch (getCompilerFlag("type")) {
                     case "commonjs": {
-                        final += "module.exports = { ";
+                        final += "module.exports={";
                         let i = 0;
-                        while (i < realVariables.length - 1) final += realVariables[i++] + ", ";
+                        while (i < realVariables.length - 1) final += realVariables[i++] + ",";
                         final += realVariables.at(-1);
-                        final += " }";
+                        final += "}";
                         break;
                     }
                     case "ecmascript": {
-                        final += "export { ";
+                        final += "export {";
                         let i = 0;
-                        while (i < realVariables.length - 1) final += realVariables[i++] + ", ";
+                        while (i < realVariables.length - 1) final += realVariables[i++] + ",";
                         final += realVariables.at(-1);
-                        final += " }";
+                        final += "}";
                         break;
                     }
                 }
@@ -140,19 +140,19 @@ function handleFlag(compile, filename, line) {
             if (realVariables.length) {
                 switch (getCompilerFlag("type")) {
                     case "commonjs": {
-                        final += "const { ";
+                        final += "const{";
                         let i = 0;
-                        while (i < realVariables.length - 1) final += realVariables[i++] + ", ";
+                        while (i < realVariables.length - 1) final += realVariables[i++] + ",";
                         final += realVariables.at(-1);
-                        final += " } = require(\"" + formatPath(relativePath.replaceAll(FILE_EXTENSION, ".js")) + "\");";
+                        final += "}=require(\"" + formatPath(relativePath.replaceAll(FILE_EXTENSION, ".js")) + "\");";
                         break;
                     }
                     case "ecmascript": {
-                        final += "import { ";
+                        final += "import {";
                         let i = 0;
-                        while (i < realVariables.length - 1) final += realVariables[i++] + ", ";
+                        while (i < realVariables.length - 1) final += realVariables[i++] + ",";
                         final += realVariables.at(-1);
-                        final += " } from \"" + formatPath(relativePath.replaceAll(FILE_EXTENSION, ".js")) + "\"";
+                        final += "} from \"" + formatPath(relativePath.replaceAll(FILE_EXTENSION, ".js")) + "\"";
                         break;
                     }
                 }

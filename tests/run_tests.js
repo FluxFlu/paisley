@@ -11,9 +11,18 @@ function pad(str, len) {
 }
 
 const print = console.log;
-console.log = () => {};
-console.error = () => {};
-console.trace = () => {};
+let consoleStorage = [];
+const logStorage = type => (...args) => {
+    consoleStorage.push(
+        {
+            type,
+            args
+        }
+    )
+};
+console.log = logStorage("Log");
+console.error = logStorage("Error");
+console.trace = logStorage("Trace")
 
 fs.readdirSync(__dirname).forEach(dir => {
     if (fs.statSync(path.join(__dirname, dir)).isDirectory()) {
