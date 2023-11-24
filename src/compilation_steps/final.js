@@ -4,13 +4,28 @@ const terminators = {
     ";": true,
     "\n": true,
     "{": true,
+    "[": true,
+    "(": true,
+    ",": true,
 };
 
 const lineStart = {
     ";": true,
     "\n": true,
     "}": true,
+    "]": true,
+    ")": true,
+    ",": true,
 };
+
+const seperatedOperators = new Map([
+    ["+", [
+        "+",
+    ]],
+    ["-", [
+        "-",
+    ]]
+]);
 
 function finalize(filename, file) {
     let final = "";
@@ -29,6 +44,9 @@ function finalize(filename, file) {
         )
             final += "\n";
         if (token.type == "Identifier" && file[i + 1] && file[i + 1].type == "Identifier")
+            final += " ";
+        if (token.type == "Operator" && file[i + 1] && file[i + 1].type == "Operator" &&
+            seperatedOperators.has(token.value) && seperatedOperators.get(token.value).includes(file[i + 1].value))
             final += " ";
     }
     return final;
