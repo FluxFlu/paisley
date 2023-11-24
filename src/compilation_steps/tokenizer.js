@@ -132,7 +132,7 @@ function Tokenize(filename, string) {
         } else if (
             string[i].match(/[0-9-.]/) &&
             (
-                string[i + 1].match(/[0-9_]/) ||
+                string[i + 1].match(/[0-9_box]/) ||
                 (
                     string[i] != "-" &&
                     string[i] != "."
@@ -151,13 +151,18 @@ function Tokenize(filename, string) {
                 currentToken += "-";
                 characterOffset++;
             }
+            let baseType;
+            if (string[i] == "0" && string[i + 1] == "b" || string[i + 1] == "o" || string[i + 1] == "x") {
+                i++;
+                baseType = string[i++];
+            }
             if (string[i] == ".") {
                 i++;
                 currentToken += ".";
                 characterOffset++;
                 dotCheck = true;
             }
-            while (string[i] && string[i].match(/[0-9_]/) || string[i] == "." && !dotCheck) {
+            while (string[i] && (string[i].match(/[0-9_]/) || baseType == "x" && string[i].match(/[0-9a-fA-F_]/)) || string[i] == "." && !dotCheck) {
                 if (string[i] == ".")
                     dotCheck = true;
                 currentToken += string[i];
@@ -165,6 +170,9 @@ function Tokenize(filename, string) {
                 i++;
             }
             let type = "Number";
+            if (baseType) {
+                currentToken = parseInt(currentToken, baseType == "x" ? 16 : baseType == "o" ? 8 : 2).toString();
+            }
             if (string[i] == "n" && !dotCheck) {
                 currentToken += "n";
                 i++;

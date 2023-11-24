@@ -18,11 +18,11 @@ const logStorage = type => (...args) => {
             type,
             args
         }
-    )
+    );
 };
 console.log = logStorage("Log");
 console.error = logStorage("Error");
-console.trace = logStorage("Trace")
+console.trace = logStorage("Trace");
 
 fs.readdirSync(__dirname).forEach(dir => {
     if (fs.statSync(path.join(__dirname, dir)).isDirectory()) {
