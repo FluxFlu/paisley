@@ -32,7 +32,7 @@
   ],
   "scripts": {
     "test": "node ./tests/run_tests.js",
-    "lint": "npx eslint ./ --global \"__dirname,process\" --ignore-pattern \"src/errors/**\" --ignore-pattern \"src/error.js\""
+    "lint": "npx eslint ./ --global \"__dirname,process\" --ignore-pattern \"src/errors/**\" --ignore-pattern \"runtime/**\" --ignore-pattern \"src/error.js\""
   },
   "devDependencies": {
     "eslint": "^8.54.0"

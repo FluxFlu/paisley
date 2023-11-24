@@ -24,11 +24,13 @@ const compilerFlags = {
 
     "type": "commonjs",
 
+    "debug": "false",
+
     "make-script": "false",
     "ignore-early-fn-name-check": "false",
     "use-abnormal-filenames": "false",
     "throw-for-errors": "false",
-    
+
     "show-docs-error-message": "true",
 
     "keyboard-layout": "qwerty",
@@ -145,8 +147,8 @@ function logUsageError(error, ...args) {
     process.exit(1);
 }
 const compilerErrors = {
-    "generic": () => [
-        "An error in the compiler has occured."
+    "generic": x => [
+        "An error in the compiler has occured" + (x ? ": \"" + x + "\"" : ".")
     ],
     "invalid_error": errorTag => [
         `Attempted to throw invalid error "${errorTag}".`,

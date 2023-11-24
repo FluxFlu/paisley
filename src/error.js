@@ -58,7 +58,7 @@ let listNum = -1;
 
 let currentError = "";
 
-let calcList = (...numbers) => { numbers.forEach(number => { number = (+number).toString().length; if (number > listNum) listNum = number; }); };
+let calcList = (...numbers) => { numbers.forEach(number => { number = (+number + 1).toString().length; if (number > listNum) listNum = number; }); };
 
 const calcListCheck = () => {
     if (listNum == -1) throw "\x1b[1;31mYou forgot to call calcList when creating the error: " + currentError + ".\x1b[0m";
@@ -66,7 +66,7 @@ const calcListCheck = () => {
 
 const lineNum = number => {
     calcListCheck();
-    return Color.blue + `${space(listNum - (+number).toString().length + 1, " ")}${number + 1} | ` + Color.reset;
+    return Color.blue + `${space(listNum - (+number + 1).toString().length + 1, " ")}${number + 1} | ` + Color.reset;
 };
 
 const emptyLine = () => {
@@ -137,18 +137,27 @@ const replaceLines = (block, replaceWith) => {
 
 const errors = {};
 
-const errorDir = fs.readdirSync(path.join(__dirname, "errors"));
-
-function readErrorList() {
+function readErrorList(errorDirName) {
+    errorDir = fs.readdirSync(errorDirName);
     for (let errorSubDir of errorDir) {
         if (path.extname(errorSubDir) == ".json") continue;
-        const errorNames = fs.readdirSync(path.join(__dirname, "errors", errorSubDir));
+        const errorNames = fs.readdirSync(path.join(errorDirName, errorSubDir));
         for (let errorName of errorNames) {
             if (path.extname(errorName) == ".js") {
-                errors[errorName.slice(0, -3)] = eval(fs.readFileSync(path.join(__dirname, "errors", errorSubDir, errorName), "utf-8"));
+                errors[errorName.slice(0, -3)] = eval(fs.readFileSync(path.join(errorDirName, errorSubDir, errorName), "utf-8"));
             }
         }
     }
+}
+
+function parseErrorPosition(error) {
+    error = error.stack.toString().split("\n");
+    error.shift();
+    while (error[0].split(":").length < 3) error.shift();
+    error = error[0];
+    const character = +error.slice(error.lastIndexOf(":") + 1, -1) - 1;
+    const line = +error.slice(error.slice(0, error.lastIndexOf(":")).lastIndexOf(":") + 1, error.lastIndexOf(":")) - 1;
+    return {line, character}
 }
 
 function formatPath(str) {
@@ -158,7 +167,7 @@ function formatPath(str) {
 let errorListRead = false;
 function logError(error, ...args) {
     if (!errorListRead) {
-        readErrorList();
+        readErrorList(path.join(__dirname, "errors"));
         errorListRead = true;
     }
     currentError = error;
@@ -182,5 +191,7 @@ module.exports = {
     logError,
     readErrorList,
     space, constructError, constructLineCheck, surroundingBlock, lastRealLine, insertLine, replaceLine,
-    formatPath
+    parseErrorPosition,
+    formatPath,
+    errors
 };
