@@ -1,6 +1,6 @@
 const path = require("node:path");
 const { getCompilerFlag, writeFile, setCurrentFile, FILE_EXTENSION, getDirOf } = require("../../paisley");
-const { logError } = require("../error");
+const { logError, formatPath } = require("../error");
 const { variables } = require("./tokenizer");
 const { validTypes } = require("./final");
 
@@ -106,7 +106,8 @@ function handleFlag(compile, filename, line) {
         case "require": {
             const requires = flag.join("").split("from");
             const include = requires[0].slice(1, -1).split(",");
-            const from = path.join(getDirOf(filename), requires[1].slice(1, -1));
+            const relativePath = requires[1].slice(1, -1);
+            const from = path.join(getDirOf(filename), relativePath);
 
             writeFile(from.replaceAll(FILE_EXTENSION, ".js"), compile(from, [copyLine]));
             setCurrentFile(filename);
@@ -143,7 +144,7 @@ function handleFlag(compile, filename, line) {
                         let i = 0;
                         while (i < realVariables.length - 1) final += realVariables[i++] + ", ";
                         final += realVariables.at(-1);
-                        final += " } = require(\"" + from.replaceAll(FILE_EXTENSION, ".js") + "\");";
+                        final += " } = require(\"" + formatPath(relativePath.replaceAll(FILE_EXTENSION, ".js")) + "\");";
                         break;
                     }
                     case "ecmascript": {
@@ -151,7 +152,7 @@ function handleFlag(compile, filename, line) {
                         let i = 0;
                         while (i < realVariables.length - 1) final += realVariables[i++] + ", ";
                         final += realVariables.at(-1);
-                        final += " } from \"" + from.replaceAll(FILE_EXTENSION, ".js") + "\"";
+                        final += " } from \"" + formatPath(relativePath.replaceAll(FILE_EXTENSION, ".js")) + "\"";
                         break;
                     }
                 }

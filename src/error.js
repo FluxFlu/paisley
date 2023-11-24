@@ -181,5 +181,6 @@ module.exports = {
     Color,
     logError,
     readErrorList,
-    space, constructError, constructLineCheck, surroundingBlock, lastRealLine, insertLine, replaceLine
+    space, constructError, constructLineCheck, surroundingBlock, lastRealLine, insertLine, replaceLine,
+    formatPath
 };

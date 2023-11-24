@@ -28,7 +28,8 @@ function finalize(filename, file) {
             )
         )
             final += "\n";
-        if (token.type == "Identifier" && file[i + 1] && file[i + 1].type == "Identifier") final += " ";
+        if (token.type == "Identifier" && file[i + 1] && file[i + 1].type == "Identifier")
+            final += " ";
     }
     return final;
 }
