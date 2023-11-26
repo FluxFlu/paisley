@@ -9,6 +9,7 @@ function handleEarlyFunctions(filename, file) {
     let currentEarlyFunction = 0;
     for (let i in file) {
         if (file[i].value == "==>" && file[i].type == "Operator") {
+            const originalToken = file[i];
             file.splice(i, 1);
             const curr = [ ];
             i--;
@@ -51,7 +52,7 @@ function handleEarlyFunctions(filename, file) {
                     curr.push(file.splice(i, 1)[0]);
                 }
             }
-            file.splice(i, 0, token("Identifier", "paisley_early_fn_" + currentEarlyFunction));
+            file.splice(i, 0, token("Identifier", "paisley_early_fn_" + currentEarlyFunction, originalToken.line, originalToken.character));
             let fnLocation = 0;
             for (let j = 0; j < file.length; j++) {
                 if (file[j].type == "CompilerValue" && file[j].value == "fnLocation") {

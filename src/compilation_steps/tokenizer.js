@@ -1,14 +1,6 @@
 const { logError } = require("../error");
+const { token } = require("./token");
 const { parseDestructure } = require("./tokenizer/parse_destructure");
-
-function token(type, value, line, character) {
-    return {
-        type, value, line, character,
-        copy: function () {
-            return token(this.type, this.value, this.line, this.character);
-        }
-    };
-}
 
 const operatorList = ["(", ")", "#", "=>", "==>", "+", "-", "=", "*", "**", "/", "~", "^", "|", "&", "<<", ">>", ">>>", "%", "||", "&&", "++", "--", "!", "{", "}", "<", ">", "<=", ">=", "!==", "===", "==", "!=", "+=", "-=", "*=", "/=", "%=", "**=", "||=", ",", "&&=", "^=", "&=", "|=", ">>=", ">>>=", "<<=", ":", "[", "]", "$"];
 
@@ -302,8 +294,8 @@ function Tokenize(filename, string) {
         }
     }
 
-    const file = tokens.map(e => token(e.type, String(e.value), e.line, e.character));
-    return file;
+    tokens.forEach(e => e.value = String(e.value));
+    return tokens;
 }
 
 

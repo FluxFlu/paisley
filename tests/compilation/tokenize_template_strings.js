@@ -3,7 +3,7 @@ const assert = require("node:assert/strict");
 const { Tokenize } = require("../../src/compilation_steps/tokenizer");
 
 module.exports = () => {
-    const out = Tokenize("example.dm", "`${300}, ${300}` + `(${300}, ${300})`");
+    const out = Tokenize("TEST.sly", "`${300}, ${300}` + `(${300}, ${300})`");
     assert.deepStrictEqual(
         out.map(e => { return { type: e.type, value: e.value }; }),
         [

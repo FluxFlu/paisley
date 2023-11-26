@@ -25,6 +25,7 @@ const compilerFlags = {
     "type": "commonjs",
 
     "debug": "false",
+    "use-strict": "true",
 
     "make-script": "false",
     "ignore-early-fn-name-check": "false",

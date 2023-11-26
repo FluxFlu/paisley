@@ -56,10 +56,10 @@ function compile(filename, requireValues) {
     }
 
     let preDefinitions = cook(filename, file);
-    let postDefinitions = handleDefinitions(filename, preDefinitions.map(e => token(e.type, e.value, e.line, e.character)));
+    let postDefinitions = handleDefinitions(filename, preDefinitions.map(e => e.copy()));
 
     while (postDefinitions.length != preDefinitions.length || postDefinitions.map((e, i) => e.value == preDefinitions[i].value && e.type == preDefinitions[i].type).filter(e => !e).length) {
-        preDefinitions = postDefinitions.map(e => token(e.type, e.value));
+        preDefinitions = postDefinitions.map(e => e.copy());
         postDefinitions = handleDefinitions(filename, postDefinitions);
     }
 
