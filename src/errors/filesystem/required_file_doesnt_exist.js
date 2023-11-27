@@ -3,7 +3,7 @@
 
     const originalFile = getRawFile(getCurrentFile());
     const normalizedFilename = path.basename(filename);
-    const potentialFiles = traverseDir(path.dirname(getOriginalFile())).filter(e => e[0] == normalizedFilename).map(e => formatPath(path.relative(getDirOf(getCurrentFile()), e[1])));
+    const potentialFiles = traverseDir(path.dirname(getOriginalFile())).filter(e => e[0] == normalizedFilename).map(e => relativeFormatPath(e[1]));
     const format = surroundingBlock(originalFile, token.line);
     const codeBlock = format[0];
     const formattedLinePosition = format[1];

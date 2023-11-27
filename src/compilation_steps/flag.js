@@ -106,7 +106,9 @@ function handleFlag(compile, filename, line) {
         case "require": {
             const requires = flag.join("").split("from");
             const include = requires[0].slice(1, -1).split(",");
-            const relativePath = requires[1].slice(1, -1);
+            let relativePath = requires[1].slice(1, -1);
+            if (!path.extname(relativePath))
+                relativePath = relativePath + ".sly";
             const from = path.join(getDirOf(filename), relativePath);
 
             writeFile(from.replaceAll(FILE_EXTENSION, ".js"), compile(from, [copyLine]));

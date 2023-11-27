@@ -14,17 +14,17 @@
     }
     return [
         false,
-        `Attempted to include nonreal variable \`${variableName}\` from file \`${filename}\`.`,
+        `Attempted to include nonreal variable \`${variableName}\` from file \`${relativeFormatPath(filename)}\`.`,
         constructLineCheck(token),
         constructError(
-            insertLineFormat(token.line, codeBlock, formattedLinePosition, space(firstToken.character, " ") + Color.red + space(firstToken.value.length, "^") + " This item is never exported from `" + filename + "`" + Color.reset),
+            insertLineFormat(token.line, codeBlock, formattedLinePosition, space(firstToken.character, " ") + Color.red + space(firstToken.value.length, "^") + " This item is never exported from `" + relativeFormatPath(filename) + "`" + Color.reset),
             emptyLine(),
             (potentialSpellChecks?.length ?
                 helpLine() + "Did you mean any of the following?" + "\n" +
                 quoteFormat(potentialSpellChecks.join("\n"))
                 : "") +
             (potentialForgottenExport ?
-                helpLine() + "File `" + filename + "` contains variable `" + variableName + "`. Did you forget to export it? You can do so as follows:" + "\n" +
+                helpLine() + "File `" + relativeFormatPath(filename) + "` contains variable `" + variableName + "`. Did you forget to export it? You can do so as follows:" + "\n" +
                 quoteLine() + "#export [" + potentialForgottenExport.value + "]"
                 : "") +
             (forgottenSpellCheck?.length ?

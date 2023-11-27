@@ -270,7 +270,7 @@ function Tokenize(filename, string) {
         character++;
     }
     for (let i = 0; i < tokens.length; i++) {
-        if (tokens[i].value == "let" || tokens[i].value == "const" || tokens[i].value == "var" || tokens[i].value == "class") {
+        if (tokens[i].value == "let" || tokens[i].value == "const" || tokens[i].value == "var" || tokens[i].value == "class" || tokens[i].value == "function") {
             let variableType = tokens[i].value;
             const addVariable = variableToken => {
                 if (variables[filename][variableToken.value])
@@ -278,7 +278,7 @@ function Tokenize(filename, string) {
                 variables[filename][variableToken.value] = token(variableType, variableToken.value, variableToken.line, variableToken.character);
             };
             i++;
-            if (variableType == "class") {
+            if (variableType == "class" || variableType == "function") {
                 addVariable(tokens[i]);
                 continue;
             }

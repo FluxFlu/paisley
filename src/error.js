@@ -164,6 +164,10 @@ function formatPath(str) {
     return "./" + path.normalize(str).replaceAll(path.win32.sep, path.posix.sep);
 }
 
+function relativeFormatPath(str) {
+    return formatPath(path.relative(getDirOf(getCurrentFile()), str));
+}
+
 let errorListRead = false;
 function logError(error, ...args) {
     if (!errorListRead) {
@@ -192,6 +196,6 @@ module.exports = {
     readErrorList,
     space, constructError, constructLineCheck, surroundingBlock, lastRealLine, insertLine, replaceLine,
     parseErrorPosition,
-    formatPath,
+    formatPath, relativeFormatPath,
     errors
 };
