@@ -15,8 +15,10 @@
                 helpLine() + `Did you forget to enclose the value in square braces? For example:\n${emptyLine()}\n` +
                 lineNum(token.line) + replaceLine(codeBlock, formattedLinePosition, e => {
                     e = e.split(" ");
-                    e[2] = Color.green + "[" + Color.reset + e[2] + Color.green + "]" + Color.reset;
-                    return e.join(" ");
+                    let final = "";
+                    final += e.shift() + " " + e.shift() + " ";
+                    final += Color.green + "[" + Color.reset + e.join(" ") + Color.green + "]" + Color.reset;
+                    return final;
                 })
                 : ``,
         )

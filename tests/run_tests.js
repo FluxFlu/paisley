@@ -20,9 +20,12 @@ const logStorage = type => (...args) => {
         }
     );
 };
+
 console.log = logStorage("Log");
 console.error = logStorage("Error");
 console.trace = logStorage("Trace");
+
+fs.writeFileSync = logStorage("WriteFile");
 
 const files = [];
 
