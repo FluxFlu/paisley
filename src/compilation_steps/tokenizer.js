@@ -165,7 +165,7 @@ function Tokenize(filename, string) {
             }
             let type = "Number";
             if (baseType) {
-                currentToken = parseInt(currentToken, baseType == "x" ? 16 : baseType == "o" ? 8 : 2).toString();
+                currentToken = parseInt(currentToken.replaceAll("_", ""), baseType == "x" ? 16 : baseType == "o" ? 8 : 2).toString();
             }
             if (string[i] == "n" && !dotCheck) {
                 currentToken += "n";
