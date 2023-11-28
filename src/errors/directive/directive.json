@@ -2,5 +2,7 @@
     "no_define_name_provided": "define",
     "no_define_value_provided": "define",
     
+    "invalid_rest_in_macro": "rest_parameters",
+
     "no_directive": "directives"
 }

@@ -75,13 +75,36 @@ function handleDefinitions(filename, file) {
                 }
                 params.at(-1).push(file[i]);
             }
+            if (params.length > macro.params.length) {
+                params.rest = [token("Operator", "[", firstToken.line, firstToken.character)];
+                while (params.length > macro.params.length) {
+                    params.at(-1).forEach(e => params.rest.push(e));
+                    params.pop();
+                    if (params.length !== macro.params.length) {
+                        const lastParam = params.rest.at(-1);
+                        params.rest.push(token("Operator", ",", lastParam.line, lastParam.character));
+                    }
+                }
+                params.rest.push(token("Operator", "]", finalToken.line, finalToken.character));
+            }
+
             let start = i;
             while (macro.code[i - start]) {
                 let t = macro.code[i - start];
                 let replacement = false;
+                if (t.value == macro.rest) {
+                    for (let f = 0; f < params.rest.length; f++) {
+                        const n = params.rest[f];
+                        start++;
+                        file.splice(i++, 0, n.copy());
+                    }
+                    start--;
+                    i--;
+                    replacement = true;
+                }
                 for (let j = 0; j < macro.params.length; j++) {
                     const param = macro.params[j];
-                    if (t.value == param) {
+                    if (t.value == param && params[j]) {
                         for (let f = 0; f < params[j].length; f++) {
                             const n = params[j][f];
                             start++;

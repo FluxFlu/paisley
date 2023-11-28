@@ -61,7 +61,16 @@ function handleFlag(compile, filename, line) {
             const name = line[0];
             const params = values[0].map(e => e.value).join("").split(",").map(e => e.trim());
             const code = values[1];
-            definitions[filename][name.value] = { value: name.value, type: "Macro", from: name, params, code };
+            let rest;
+            for (let i = 0; i < params.length; i++) {
+                if (params[i].slice(0, 3) == "...") {
+                    if (i == params.length - 1)
+                        rest = params.pop().slice(3);
+                    else
+                        logError("invalid_rest_in_macro", copyLine, i);
+                }
+            }
+            definitions[filename][name.value] = { value: name.value, type: "Macro", from: name, params, rest, code };
             break;
         }
         case "procedure": {
