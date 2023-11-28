@@ -1,70 +1,68 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-    <title>Paisley | Procedure</title>
-    <link rel="icon" type="image/x-icon" href="../../assets/Paisley.png">
-    <link rel="stylesheet" type="text/css" href="../../style.css" />
-    <script src="../../format.js"></script>
-</head>
-
-<body><br><br>
-    <h1>
-        Procedure
-    </h1>
-    <div>
-
-
-        <h>What is the procedure directive</h>
-
-        <p>
-            The <cb>#procedure</cb> directive is used to create procedures.
-        </p>
-
-        <br><br>
-        <h>How to use</h>
-
-        <p>
-            The procedure directive follows the syntax of <cb>#procedure name[param] [code]</cb>.
-        </p>
-
-        <br><br>
-        <h>What is a procedure</h>
-
-        <p>
-            A procedure is a function that runs at compile time. It accepts a single argument, that being an array of syntactical tokens.
-        </p>
-
-        <br><br>
-        <h>Example:</h>
-        <pre>
+	<head>
+		<title>Paisley | Procedure</title>
+		<link rel="icon" type="image/x-icon" href="..\..\assets\Paisley.png">
+		<link rel="stylesheet" type="text/css" href="..\..\style.css" />
+		<script>
+			document.addEventListener("DOMContentLoaded", () => {
+				Array.from(document.getElementsByTagName("p")).forEach(element => {
+					element.innerHTML = element.innerHTML.split("\n").map(e => e.trim()).join("\n");
+				});
+			});
+		</script>
+	</head>
+	<body><br><br>
+		<h1>Procedure</h1>
+		<div>
+			<h>What is the procedure directive</h>
+			<p>The <cb>#procedure</cb> directive is used to create procedures.</p>
+			<br> <br>
+			<h>How to use</h>
+			<p>The procedure directive follows the syntax of <cb>#procedure name[param] [code]</cb>.</p>
+			<br> <br>
+			<h>What is a procedure</h>
+			<p>A procedure is a function that runs at compile time. It accepts a single argument, that being an array of syntactical tokens.</p>
+			<br> <br>
+			<h>Example:</h>
+<pre>
 #procedure format[tokens] [
-    return '"' + tokens.map(e => e.value).join('", "') + '"'
+    return '"' + tokens.map(e =&gt; e.value).join('", "') + '"'
 ]
 
 console.log(format(one two three));
 </pre>
-
-        <p>This will compile to:</p>
-
-        <pre>
+			<p>This will compile to:</p>
+<pre>
 console.log("\"one\", \"two\", \"three\"");
 </pre>
-        <br><br>
-        <h>Syntactical Tokens</h>
-
-        <p>
-            The syntactical tokens have four properties. These are <cb>type</cb>, <cb>value</cb>, <cb>line</cb>, and <cb>character</cb>.
-
-            The <cb>type</cb> property represents the type of token. Values include <cb>Identifier</cb> and <cb>Number</cb>.
-
-            The <cb>value</cb> property represents the value of the token.
-
-            The <cb>line</cb> and <cb>character</cb> properties represent the original position of the token in the file.
-
-            The tokens also have the <cb>copy</cb> method, which allows one to create a shallow copy of the token.
-        </p>
-    </div>
-</body>
-
+			<br> <br>
+			<h>Syntactical Tokens</h>
+			<p>The syntactical tokens have four properties. These are <cb>type</cb>, <cb>value</cb>, <cb>line</cb>, and <cb>character</cb>.</p>
+			<p>The <cb>type</cb> property represents the type of token. Potential values are as follows:</p>
+			<ul>
+				<li> <cb>Identifier</cb>: Used for identifiers.</li>
+				<br>
+				<li> <cb>Operator</cb>: Used for operators.</li>
+				<br>
+				<li> <cb>LineBreak</cb>: Used for newline characters.</li>
+				<br>
+				<li> <cb>Separator</cb>: Used for semicolons.</li>
+				<br>
+				<li> <cb>CookedValue</cb>: Used for the results of cooking.</li>
+				<br>
+				<li> <cb>Number</cb>: Used for Number literals.</li>
+				<br>
+				<li> <cb>BigInt</cb>: Used for BigInt literals.</li>
+				<br>
+				<li> <cb>String</cb>: Used for String literals.</li>
+				<br>
+				<li> <cb>RegExp</cb>: Used for Regular Expression literals.</li>
+				<br>
+			</ul>
+			<p>The <cb>value</cb> property represents the value of the token.</p>
+			<p>The <cb>line</cb> and <cb>character</cb> properties represent the original position of the token in the file.</p>
+			<p>The tokens also have the <cb>copy</cb> method, which allows one to create a shallow copy of the token.</p>
+		</div>
+	</body>
 </html>

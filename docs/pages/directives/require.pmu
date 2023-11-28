@@ -1,0 +1,21 @@
+@Require
+
+#What is the require directive
+
+The `#require` directive is used to import both macros and real values from a file that has `export`ed them.
+
+\n\n
+
+#How to require
+
+The require directive follows the syntax of `#require [value1, value2, value3...] from [path to file]`
+
+\n\n
+
+#Example of a full code block
+
+```
+#require [x, y] from [./export.sly]
+
+console.log($<x + 200> + y);
+```

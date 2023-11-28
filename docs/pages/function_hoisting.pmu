@@ -1,0 +1,80 @@
+@Function Hoisting
+
+#What is function hoisting?
+
+Hoisting is when declarations are moved to an earlier point in the file, typically moved to the beginning of the scope.
+
+Function hoisting in Paisley is when the creation of a function literal is moved to another point in a file to save on resources. It is done by replacing `=>` with `==>` during function creation.
+
+\n\n
+
+#An example of function hoisting
+
+Both of the following blocks of code do the same thing, but the second one (hypothetically) runs faster.
+
+```
+const arr = [ [ {x: 0, y: 0}, {x: 1, y: 1}, {x: 2, y: 2} ], [ {x: 3, y: 3}, {x: 4, y: 4}, {x: 5, y: 5} ] ];
+
+for (let i = 0; i < arr.length; i++) {
+    arr[i] = arr[i].map(e ^hl/=>$hl/ e.x);
+}
+```
+
+```
+const arr = [ [ {x: 0, y: 0}, {x: 1, y: 1}, {x: 2, y: 2} ], [ {x: 3, y: 3}, {x: 4, y: 4}, {x: 5, y: 5} ] ];
+    
+for (let i = 0; i < arr.length; i++) {
+    arr[i] = arr[i].map(e ^hl/==>$hl/ e.x);
+}
+```
+
+The compiled code will look something like this:
+
+```
+^hl/const paisley_early_fn_0 = e => e.x;$hl/
+
+const arr = [ [ {x: 0, y: 0}, {x: 1, y: 1}, {x: 2, y: 2} ], [ {x: 3, y: 3}, {x: 4, y: 4}, {x: 5, y: 5} ] ];
+    
+for (let i = 0; i < arr.length; i++) {
+    arr[i] = arr[i].map(^hl/paisley_early_fn_0$hl/);
+}
+```
+
+The difference here occurs because in the second example, the function is hoisted, meaning it is declared earlier on in the file and referenced later, rather than being re-created each time the loop code occurs.
+
+This doesn't make much of a difference in this example, and in fact, the hoisted code block is likely slower, but for instances where the loop runs many more times than just two, it can make a big difference.
+
+\n\n
+
+#The fn_location directive
+The `#fn_location` directive can be used to decide where the hoisted functions are moved to in that file.
+
+```
+const arr = [ [ {x: 0, y: 0}, {x: 1, y: 1}, {x: 2, y: 2} ], [ {x: 3, y: 3}, {x: 4, y: 4}, {x: 5, y: 5} ] ];
+
+function main(args) {
+    #fn_location
+
+    for (let i = 0; i < arr.length; i++) {
+        arr[i] = arr[i].map(e ==> e.x ^hl/+ args$hl/);
+    }
+
+}   
+```
+
+The compiled code will look something like this:
+
+```
+const arr = [ [ {x: 0, y: 0}, {x: 1, y: 1}, {x: 2, y: 2} ], [ {x: 3, y: 3}, {x: 4, y: 4}, {x: 5, y: 5} ] ];
+
+function main(args) {
+    ^hl/const paisley_early_fn_0 = e => e.x + args$hl/
+
+    for (let i = 0; i < arr.length; i++) {
+        arr[i] = arr[i].map(^hl/paisley_early_fn_0$hl/);
+    }
+
+}
+```
+
+The argument `args` can be referenced in the function in this example because the function is declared as part of `main`.

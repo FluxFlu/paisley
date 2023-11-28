@@ -1,0 +1,46 @@
+@Cooking
+
+#What is cooking?
+
+Cooking is the term for evaluating code at compile time rather than runtime using angle braces `<>`.
+
+\n\n
+
+#An example of cooking
+
+Both of the following blocks of code do the same thing. They both print 400.
+
+```
+#define x [200]
+console.log(x + 200);
+```
+
+```
+#define x [200]
+console.log($<x + 200>);
+```
+
+The only difference is in the compiled code.
+
+```
+console.log(200 + 200);
+```
+
+```
+console.log(400);
+```
+
+The difference here occurs because in the second example, 200 + 200 was cooked; evaluated at compile time instead of runtime.
+
+You will need to be careful though, or you could end up with something like the following:
+
+```
+console.log($<Math.random()>); /*// Once compiled, the "random" value will always be the same.*/
+```
+
+Or worse,
+
+```
+const x = 200;
+console.log($<x + 200>); /*// The compiler will throw an error as 'x' is not defined at compile-time.*/
+```

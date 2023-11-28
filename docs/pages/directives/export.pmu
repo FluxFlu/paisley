@@ -1,0 +1,23 @@
+@Export
+
+#What is the export directive
+
+The `#export` directive is used to export both macros and real values from a file so they may be `require`d by other files.
+
+\n\n
+
+#How to export
+
+The export directive follows the syntax of `#export [value1, value2, value3...]`
+
+\n\n
+
+#Example of a full code block
+
+```
+#define x [200]
+
+const y = x + 200;
+
+#export [x, y]
+```

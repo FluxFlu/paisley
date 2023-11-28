@@ -1,0 +1,52 @@
+@Define
+
+#What is the define directive
+
+The `#define` directive is used to create constant values that exist at compile-time.
+
+\n\n
+
+#How to use
+
+The define directive follows the syntax of `#define from [to]`.
+
+\n\n
+
+#What is a definition
+
+A definition is a token that is substituted for another value at compile time.
+
+\n\n
+
+#Example:
+
+```
+#define x [500]
+
+console.log(x);
+```
+
+This will compile to:
+
+```
+console.log(500);
+```
+
+\n\n
+
+#Looping during compilation
+
+During compilation, the application of macros will loop until there are no changes. This means the following is possible:
+
+```
+#define x [500]
+#define y [x + 200]
+
+console.log(y);
+```
+
+This will compile to:
+
+```
+console.log(500 + 200);
+```

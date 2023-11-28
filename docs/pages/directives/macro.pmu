@@ -1,0 +1,33 @@
+@Macro
+
+#What is the macro directive
+
+The `#macro` directive is used to create macros.
+
+\n\n
+
+#How to use
+
+The macro directive follows the syntax of `#macro name[params] [code]`.
+
+\n\n
+
+#What is a macro
+
+A macro is a function that runs at compile time.
+
+\n\n
+
+#Example:
+
+```
+#macro add[x, y] [x + y]
+
+console.log(add(2, 3));
+```
+
+This will compile to:
+
+```
+console.log(2 + 3);
+```

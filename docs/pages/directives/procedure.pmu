@@ -1,0 +1,58 @@
+@Procedure
+
+#What is the procedure directive
+
+The `#procedure` directive is used to create procedures.
+
+\n\n
+
+#How to use
+
+The procedure directive follows the syntax of `#procedure name[param] [code]`.
+
+\n\n
+
+#What is a procedure
+
+A procedure is a function that runs at compile time. It accepts a single argument, that being an array of syntactical tokens.
+
+\n\n
+
+#Example:
+
+```
+#procedure format[tokens] [
+    return '"' + tokens.map(e => e.value).join('", "') + '"'
+]
+
+console.log(format(one two three));
+```
+
+This will compile to:
+
+```
+console.log("\"one\", \"two\", \"three\"");
+```
+
+\n\n
+
+#Syntactical Tokens
+
+The syntactical tokens have four properties. These are `type`, `value`, `line`, and `character`.
+
+The `type` property represents the type of token. Potential values are as follows:
+- `Identifier`: Used for identifiers.
+- `Operator`: Used for operators.
+- `LineBreak`: Used for newline characters.
+- `Separator`: Used for semicolons.
+- `CookedValue`: Used for the results of cooking.
+- `Number`: Used for Number literals.
+- `BigInt`: Used for BigInt literals.
+- `String`: Used for String literals.
+- `RegExp`: Used for Regular Expression literals.
+
+The `value` property represents the value of the token.
+
+The `line` and `character` properties represent the original position of the token in the file.
+
+The tokens also have the `copy` method, which allows one to create a shallow copy of the token.

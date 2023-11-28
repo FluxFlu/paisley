@@ -1,0 +1,79 @@
+@Compiler Flags
+
+#use-strict
+
+The `use-strict` compiler flag determines whether or not strict mode should be enabled.
+
+Options are:
+-true
+-false
+
+Default is `false`.
+
+#type
+
+The `type` compiler flag determines which type of js the program is to be compiled to.
+
+Options are:
+- commonjs
+- ecmascript
+
+Default is `commonjs`.
+
+# throw-for-errors
+
+The `throw-for-errors` compiler flag determines whether the program should throw an error on compilation failure, or simply exit cleanly with an exit value of 1.
+
+Options are:
+- true
+- false
+
+Default is `false`.
+
+#use-abnormal-filenames
+
+The `use-abnormal-filenames` compiler flag determines whether filenames that don't end in `.sly` should be accepted.
+
+Options are:
+- true
+- false
+
+Default is false.
+
+#show-docs-error-message
+
+The `show-docs-error-message` compiler flag determines whether or not to show the message after errors indicating that one can use `paisley --docs <errorName>` to see documentation..
+
+Options are:
+- true
+- false
+
+Default is `true`.
+
+#keyboard-layout
+
+The `keyboard-layout` compiler flag determines which keyboard layout you are using, for the purpose of typo analysis.
+
+Options are:
+- qwerty
+- azerty
+- dvorak
+- colemac
+
+Default is `qwerty`.
+
+#typo-threshold
+
+The `typo-threshold` compiler flag determines how far away two keys can be from each other and still be considered a typo.
+
+Value can be any integer.
+
+Default is `2`.
+
+#error-threshold
+
+The `error-threshold` compiler flag determines how many differences two identifiers can have and still be considered similar.
+
+Value can be any integer.
+
+Default is `3`.

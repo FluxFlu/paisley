@@ -1,0 +1,12 @@
+@Custom Errors
+
+#Why custom errors?
+
+Paisley includes many features, such as procedures and cooking, that require code to be executed at compile-time rather than runtime.
+
+Oftentimes, this code will have the potential to be used improperly. When that happens, the code should throw an error.
+
+Custom error features exist to help Paisley developers create readable errors that are in-line with the expectations of those using their code.
+
+\n\n
+-%./directives/error_log.html%Error.log%

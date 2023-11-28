@@ -1,0 +1,51 @@
+@Compilation Order
+
+#Directives are interpreted
+
+Directives are lines of code starting with a pound `#`.
+
+Interpreting these is the first step in compilation, which is the reason the following code still runs properly:
+
+```
+console.log(x);
+#define x [200]
+```
+
+\n\n
+
+#Values are cooked
+
+Cooking is the term for evaluating code at compile time rather than runtime using angle braces `$<>`.
+
+An example of this is as follows:
+
+```
+#define x [200]
+console.log($<x + 20>);
+```
+
+\n\n
+
+#Macros are handled
+
+Macro substitution is when values are substituted for other values at compile time. This is done using the directives `#define`, `#macro`, and `#procedure`.
+
+These being interpreted after token groups is the reason the following code still runs properly:
+
+```
+#macro add[x, y] [x + y]
+console.log(add(1 + 2, 3));
+```
+
+\n\n
+
+#Values are cooked a second time
+
+The final code is then cooked again.
+
+This is the reason the following code works:
+
+```
+#macro add[x, y] [$<x + y>]
+console.log(add(1 + 2, 3 ));
+```
