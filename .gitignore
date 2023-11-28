@@ -3,6 +3,7 @@ test.*
 node_modules
 
 *.html
+!index.html
 
 pids
 *.pid
