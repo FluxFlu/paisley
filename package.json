@@ -1,6 +1,6 @@
 {
   "name": "paisley",
-  "version": "1.4.5",
+  "version": "1.5.0",
   "description": "A grindy javascript precompiler. Javascript the way you want it.",
   "author": "Missy \"FluxFlu\"",
   "keywords": [
@@ -29,7 +29,6 @@
     "!*.html",
     "index.html",
     "./scripts/compile_markup.js",
-
     "./src/**",
     "./LICENSE",
     "./paisley.js"
