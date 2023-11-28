@@ -25,7 +25,7 @@
             "Failure to cook.",
             constructLineCheck(firstToken),
             constructError(
-                insertLineFormat(firstToken.line, codeBlock, formattedLinePosition, space(firstToken.character, " ") + Color.red + space(lastToken.character - firstToken.character, "^") + " Compile-time error occurs here" + Color.reset),
+                insertLineFormat(firstToken.line, codeBlock, formattedLinePosition, repeat(firstToken.character, " ") + Color.red + repeat(lastToken.character - firstToken.character, "^") + " Compile-time error occurs here" + Color.reset),
                 emptyLine(),
                 emptyLine() + "The javascript error thrown was the following:",
                 emptyLine(),
@@ -46,7 +46,7 @@
             "Failure to cook.",
             constructLineCheck(firstToken),
             constructError(
-                lineFormat(firstToken.line, replaceLines(codeBlock, e => e + space(longestStringLength - e.length + 3, " ") + Color.red + "]" + Color.reset)) + Color.red + "  Compile-time error occurs here" + Color.reset,
+                lineFormat(firstToken.line, replaceLines(codeBlock, e => e + repeat(longestStringLength - e.length + 3, " ") + Color.red + "]" + Color.reset)) + Color.red + "  Compile-time error occurs here" + Color.reset,
                 emptyLine(),
                 emptyLine() + "The javascript error thrown was the following:",
                 emptyLine(),

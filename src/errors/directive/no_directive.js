@@ -9,7 +9,7 @@
         `Pound sign (#) used but no directive name provided.`,
         constructLineCheck(token),
         constructError(
-            insertLineFormat(token.line, codeBlock, formattedLinePosition, space(token.character + token.value.length, " ") + Color.red + " ^ No directive specified." + Color.reset),
+            insertLineFormat(token.line, codeBlock, formattedLinePosition, repeat(token.character + token.value.length, " ") + Color.red + " ^ No directive specified." + Color.reset),
             emptyLine(),
         )
     ];

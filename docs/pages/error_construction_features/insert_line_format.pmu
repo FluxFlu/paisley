@@ -1,0 +1,28 @@
+@insertLineFormat
+
+#The insertLineFormat function
+
+The `insertLineFormat` function is used to insert a single-line string into a larger multi-line string, while simultaneously formatting that string to include the %./prefix_functions.html%lineNum prefix% at the beginning of each line.
+
+It follows the syntax `insertLineFormat(startNumber, block, line, toInsert)`.
+
+The function inserts the single-line string `toInsert` at position `line` in the larger `block`, formats it to include line numbers, and then returns the result.
+
+For example, calling `insertLineFormat(9, codeBlock, 2, " -> Relevant Information")`, where codeBlock is defined as follows:
+
+```
+const x = 0;
+console.log(x + 1);
+console.log(x + 2);
+console.log(x + 3);
+```
+
+Would return the following string:
+
+```
+  8 | const x = 0;
+  9 | console.log(x + 1);
+ 10 | console.log(x + 2);
+    |  -> Relevant Information
+ 11 | console.log(x + 3);
+```

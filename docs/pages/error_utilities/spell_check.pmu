@@ -1,0 +1,9 @@
+@spellCheck
+
+#The spellCheck function
+
+The `spellCheck` function is used to check if a certain string is similar enough to any of the strings from a valid set that it may be considered a spelling error.
+
+The function uses the syntax `spellCheck(listOfValidValues, value)`.
+
+For example, `spellCheck(["exampleValue", "otherExampleValue"], "examplValue")` would return `["exampleValue"]`.

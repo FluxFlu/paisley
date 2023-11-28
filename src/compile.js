@@ -1,5 +1,4 @@
 const fs = require("fs");
-const path = require("path");
 const { checkInvalidNames } = require("./compilation_steps/check_invalid_names");
 const { cook } = require("./compilation_steps/cook");
 const { handleEarlyFunctions } = require("./compilation_steps/early_function");
@@ -7,7 +6,7 @@ const { finalize } = require("./compilation_steps/final");
 const { handleFlag, definitions, publicDefinitions } = require("./compilation_steps/flag");
 const { handleDefinitions } = require("./compilation_steps/sub_definitions");
 const { Tokenize, token } = require("./compilation_steps/tokenizer");
-const { setCurrentFile, setRawFile, logUsageError, setDirOf } = require("../paisley");
+const { setCurrentFile, logUsageError } = require("../paisley");
 const { logError } = require("./error");
 const { stripSingleLineComments } = require("./compilation_steps/strip_single_line_comments");
 
@@ -30,8 +29,6 @@ function compile(filename, requireValues) {
         .replaceAll("\r", "\n");
 
     setCurrentFile(filename);
-    setRawFile(filename, originalFile);
-    setDirOf(filename, path.dirname(filename));
 
     publicDefinitions[filename] = definitions[filename] = {};
 

@@ -1,0 +1,25 @@
+@lineFormat
+
+#The lineFormat function
+
+The `lineFormat` function is used to format code for display in an error.
+
+It follows the syntax `lineFormat(startNumber, block)`.
+
+The function inserts the %./prefix_functions.html%lineNum prefix% at the beginning of each line in the code block, the first number being `startNumber`, and returns the formatted block.
+
+For example, if the following block were passed to the function along with a `startNumber` of 9,
+
+```
+const x = "Hello, world!";
+
+console.log(x);
+```
+
+The result would be as follows:
+
+```
+  9 | const x = "Hello, world!";
+ 10 |
+ 11 | console.log(x);
+```

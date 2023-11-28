@@ -9,7 +9,7 @@
         "Unbalanced braces in lambda expression.",
         constructLineCheck(token),
         constructError(
-            insertLineFormat(token.line, codeBlock, formattedLinePosition, space(token.character, " ") + Color.red + "^ \"Initial\" brace is here" + Color.reset),
+            insertLineFormat(token.line, codeBlock, formattedLinePosition, repeat(token.character, " ") + Color.red + "^ \"Initial\" brace is here" + Color.reset),
             emptyLine(),
             emptyLine() + "A corresponding brace does not exist.",
         )

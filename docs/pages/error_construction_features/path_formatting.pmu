@@ -1,0 +1,13 @@
+@Path Formatting
+
+#The formatPath function
+
+The `formatPath` function is used to format a filepath for display in an error.
+
+It follows the syntax `formatPath(path)`.
+
+#The relativeFormatPath function
+
+The `relativeFormatPath` function use used to format a filepath that is supposed to be relative to the current filepath.
+
+It follows the syntax `formatPath(path)`.

@@ -17,7 +17,7 @@
         `Attempted to include nonreal variable \`${variableName}\` from file \`${relativeFormatPath(filename)}\`.`,
         constructLineCheck(token),
         constructError(
-            insertLineFormat(token.line, codeBlock, formattedLinePosition, space(firstToken.character, " ") + Color.red + space(firstToken.value.length, "^") + " This item is never exported from `" + relativeFormatPath(filename) + "`" + Color.reset),
+            insertLineFormat(token.line, codeBlock, formattedLinePosition, repeat(firstToken.character, " ") + Color.red + repeat(firstToken.value.length, "^") + " This item is never exported from `" + relativeFormatPath(filename) + "`" + Color.reset),
             emptyLine(),
             (potentialSpellChecks?.length ?
                 helpLine() + "Did you mean any of the following?" + "\n" +

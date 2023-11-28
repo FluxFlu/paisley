@@ -21,7 +21,7 @@
             "Procedure threw an error.",
             constructLineCheck(firstToken),
             constructError(
-                insertLineFormat(firstToken.line, codeBlock, formattedLinePosition, space(firstToken.character, " ") + Color.red + space(lastToken.character - firstToken.character, "^") + " Compile-time error occurs here" + Color.reset),
+                insertLineFormat(firstToken.line, codeBlock, formattedLinePosition, repeat(firstToken.character, " ") + Color.red + repeat(lastToken.character - firstToken.character, "^") + " Compile-time error occurs here" + Color.reset),
                 emptyLine(),
                 emptyLine() + "The relevant procedure is defined as such:",
                 emptyLine(),
@@ -42,7 +42,7 @@
             "Procedure threw an error.",
             constructLineCheck(firstToken),
             constructError(
-                lineFormat(firstToken.line, replaceLines(codeBlock, e => e + space((longerString < e.length + 3 ? e.length : longerString) - e.length + 3, " ") + Color.red + "]" + Color.reset)) + Color.red + "  Compile-time error occurs here" + Color.reset,
+                lineFormat(firstToken.line, replaceLines(codeBlock, e => e + repeat((longerString < e.length + 3 ? e.length : longerString) - e.length + 3, " ") + Color.red + "]" + Color.reset)) + Color.red + "  Compile-time error occurs here" + Color.reset,
                 emptyLine(),
                 emptyLine() + "The javascript error thrown was the following:",
                 emptyLine(),

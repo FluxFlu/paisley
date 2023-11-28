@@ -1,0 +1,27 @@
+@Filesystem Utilities
+
+#The traverseDir function
+
+The `traverseDir` function returns all of the files in a given directory.
+
+The function uses the syntax `traverseDir(directoryPath)`.
+
+It returns an array of key-value pair arrays with the name of the directory as the key and the full path to the directory as the value.
+
+getRawFile, getCurrentFile, getOriginalFile
+
+#The getRawFile function
+
+The `getRawFile` function returns the original raw contents of a file given its path.
+
+It follows the syntax `getRawFile(path)`.
+
+The function sanitizes the file for proper use, in particular ensuring that all newlines will be represented as `\n`.
+
+#The getCurrentFile function
+
+The `getCurrentFile` function returns the path of the file that is currently being processed. It takes no arguments.
+
+#The getOriginalFile function
+
+The `getOriginalFile` function returns the path of the entry file; the file specified when running the compiler. It takes no arguments.

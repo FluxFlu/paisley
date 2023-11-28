@@ -1,0 +1,9 @@
+@repeat
+
+#The Repeat function
+
+The `repeat` function is used to repeat a certain string N times.
+
+It follows the syntax `repeat(number, string)`.
+
+As an example, `repeat(6, "^")` will return `"^^^^^^"`.

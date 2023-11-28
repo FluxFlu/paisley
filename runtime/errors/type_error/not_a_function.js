@@ -18,7 +18,7 @@
         `"${valueName}" is not a function.`,
         constructLineCheck(token),
         constructError(
-            insertLineFormat(token.line, codeBlock, formattedLinePosition, space(token.character, " ") + Color.red + "^ Attempted to call non-function value here" + Color.reset),
+            insertLineFormat(token.line, codeBlock, formattedLinePosition, repeat(token.character, " ") + Color.red + "^ Attempted to call non-function value here" + Color.reset),
             emptyLine(),
         )
     ];

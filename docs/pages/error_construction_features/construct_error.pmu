@@ -1,0 +1,7 @@
+@constructError
+
+#Error Construction
+
+The main bodies of errors are created using the `constructError` function.
+
+This is a function used to create the main body of an error. It takes a series of arguments and concatenates them, separated by a newline.

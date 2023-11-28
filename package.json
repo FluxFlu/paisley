@@ -36,7 +36,7 @@
   ],
   "scripts": {
     "uniform_newlines": "node ./scripts/uniform_newlines.js ./",
-    "compile_docs": "node ./scripts/compile_markup ./docs --delete-files",
+    "compile_docs": "node ./scripts/compile_markup ./docs",
     "test": "node ./tests/run_tests.js",
     "lint": "npx eslint ./ --global \"__dirname,process\" --ignore-pattern \"src/errors/**\" --ignore-pattern \"runtime/**\" --ignore-pattern \"src/util/eval.js\" --ignore-pattern \"src/error.js\"",
     "install": "node ./scripts/compile_markup ./docs --delete-files"

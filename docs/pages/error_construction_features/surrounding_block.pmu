@@ -1,0 +1,40 @@
+@surroundingBlock
+
+#The surroundingBlock function
+
+The `surroundingBlock` function is used to retreive the code surrounding a certain line.
+
+It follows the syntax `surroundingBlock(block, line, terminate = true, length = 3)`.
+
+#Parameters
+
+The `block` argument represents the full length of code that the snippet should be taken from.
+
+The `line` argument represents the "main" line of code; the one that the snippet is "surrounding".
+
+The `terminate` argument decides whether or not the snippet should cease where the `line` is. If false, the returned block of code will be centered around `line`.
+
+The `length` argument decides how long the return value should be, in lines.
+
+#Return value
+
+The function returns an array of length two.
+
+The first value in the array is the resultant string. The second value in the array is the position in the resultant string of the "main" line.
+
+For example, calling `surroundingBlock(codeBlock, 2, true, 3)`, where codeBlock is defined as follows:
+
+```
+const x = 0;
+console.log(x + 1);
+console.log(x + 2);
+console.log(x + 3);
+```
+
+Would result in the return value `[resultantCodeBlock, 2]`, where resultantCodeBlock is defined as follows:
+
+```
+const x = 0;
+console.log(x + 1);
+console.log(x + 2);
+```

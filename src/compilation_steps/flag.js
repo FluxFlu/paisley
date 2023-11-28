@@ -1,5 +1,5 @@
 const path = require("node:path");
-const { getCompilerFlag, writeFile, setCurrentFile, FILE_EXTENSION, getDirOf } = require("../../paisley");
+const { getCompilerFlag, writeFile, setCurrentFile, FILE_EXTENSION } = require("../../paisley");
 const { logError, formatPath } = require("../error");
 const { variables } = require("./tokenizer");
 const { validTypes } = require("./final");
@@ -118,7 +118,7 @@ function handleFlag(compile, filename, line) {
             let relativePath = requires[1].slice(1, -1);
             if (!path.extname(relativePath))
                 relativePath = relativePath + ".sly";
-            const from = path.join(getDirOf(filename), relativePath);
+            const from = path.join(path.dirname(filename), relativePath);
 
             writeFile(from.replaceAll(FILE_EXTENSION, ".js"), compile(from, [copyLine]));
             setCurrentFile(filename);

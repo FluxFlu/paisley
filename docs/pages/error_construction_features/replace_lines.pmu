@@ -1,0 +1,23 @@
+@replaceLines
+
+#The replaceLines function
+
+The `replaceLines` function is used to call a function on each line of a multi-line string.
+
+It follows the syntax `replaceLines(block, replaceWith)`.
+
+For example, if the following block were passed to the function along with a `replaceWith` of `(line) => "[ " + line`,
+
+```
+const x = "Hello, world!";
+
+console.log(x);
+```
+
+The result would be as follows:
+
+```
+[ const x = "Hello, world!";
+[ 
+[ console.log(x);
+```

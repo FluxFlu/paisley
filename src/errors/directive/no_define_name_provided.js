@@ -9,7 +9,7 @@
         `Attempted to use the \`#define\` directive without providing a name.`,
         constructLineCheck(token),
         constructError(
-            insertLineFormat(token.line, codeBlock, formattedLinePosition, space(token.character + token.value.length, " ") + Color.red + " ^ No name provided." + Color.reset),
+            insertLineFormat(token.line, codeBlock, formattedLinePosition, repeat(token.character + token.value.length, " ") + Color.red + " ^ No name provided." + Color.reset),
             emptyLine(),
         )
     ];

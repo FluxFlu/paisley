@@ -1,0 +1,19 @@
+@Error.log
+
+#Error Logging
+
+Error.log is a static method of the Error class. It allows users to log errors at compile-time.
+
+Error.log follows the syntax `Error.log(errorCode, errorDetails)`.
+
+#Error Details
+
+The second parameter of the `Error.log` method, `errorDetails`, is an array of length 4. It is made up of the following:
+
+- The first value is a boolean representing whether or not the error is serious enough to abort compilation instantly.
+
+- The second value is a string constituting a single-line description of the error.
+
+- The third value is a string representing where in the file the error takes place, and should be created using `constructLineCheck`.
+
+- The fourth value is a string that makes up the remainder of the error. It is the explanation of what caused the error. It should be created using `constructError`.

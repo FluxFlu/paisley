@@ -23,7 +23,7 @@
         `Expected object, received null or non-object.`,
         constructLineCheck(token),
         constructError(
-            insertLineFormat(token.line, codeBlock, formattedLinePosition, space(token.character, " ") + Color.red + space(token.value.length, "^") + " Attempted to pass invalid value to this" + Color.reset),
+            insertLineFormat(token.line, codeBlock, formattedLinePosition, repeat(token.character, " ") + Color.red + repeat(token.value.length, "^") + " Attempted to pass invalid value to this" + Color.reset),
             emptyLine(),
         )
     ];

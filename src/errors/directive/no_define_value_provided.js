@@ -9,7 +9,7 @@
         `Attempted to use the \`#define\` directive without providing a value for substitution.`,
         constructLineCheck(token),
         constructError(
-            insertLineFormat(token.line, codeBlock, formattedLinePosition, space(token.character + token.value.length, " ") + Color.red + " ^ No value provided." + Color.reset),
+            insertLineFormat(token.line, codeBlock, formattedLinePosition, repeat(token.character + token.value.length, " ") + Color.red + " ^ No value provided." + Color.reset),
             emptyLine(),
             potentialOther ?
                 helpLine() + `Did you forget to enclose the value in square braces? For example:\n${emptyLine()}\n` +

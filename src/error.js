@@ -1,15 +1,15 @@
 const fs = require("node:fs");
 const path = require("node:path");
 
-const { getCompilerFlag, getRawFile, getCurrentFile, getOriginalFile, setErrorLogged, logCompilerError, printAborting, getDirOf } = require("../paisley");
+const { getCompilerFlag, getRawFile, getCurrentFile, getOriginalFile, setErrorLogged, logCompilerError, printAborting } = require("../paisley");
 const { traverseDir } = require("./error_utils/fileUtils");
 const { spellCheck } = require("./error_utils/spellCheck");
 
-const space = (num, char) => {
-    let spaces = "";
+function repeat(num, char) {
+    let out = "";
     if (num < 0) num = 0;
-    while (num--) spaces += char;
-    return spaces;
+    while (num--) out += char;
+    return out;
 };
 
 const Color = {
@@ -21,9 +21,11 @@ const Color = {
     reset: "\x1b[0m",
 };
 
-const constructError = (...args) => args.join("\n") + "\n";
+function constructError(...args) {
+    return args.join("\n") + "\n";
+}
 
-const constructLineCheck = (token) => {
+function constructLineCheck(token) {
     let out = "";
 
     if (token.line != undefined)
@@ -32,9 +34,9 @@ const constructLineCheck = (token) => {
         out += `:${token.character + 1}`;
 
     return out;
-};
+}
 
-const surroundingBlock = (block, line, terminate = true, length = 3) => {
+function surroundingBlock(block, line, terminate = true, length = 3) {
     line++;
     if (line - length < 0)
         length = line;
@@ -42,47 +44,53 @@ const surroundingBlock = (block, line, terminate = true, length = 3) => {
         return [block.split("\n").slice(line - length, line).join("\n"), length - 1];
     else
         return [block.split("\n").slice(line - length / 2, line + length / 2).join("\n"), length / 2];
-};
+}
 
-const lastRealLine = (block, line) => {
-    const blockLines = block.split("\n");
-    for (let i = line - 1; ; i--) {
-        if (i < 0)
-            return -1;
-        if (blockLines[i].match(/\S/))
-            return i;
-    }
-};
+// function lastRealLine(block, line) {
+//     const blockLines = block.split("\n");
+//     for (let i = line - 1; ; i--) {
+//         if (i < 0)
+//             return -1;
+//         if (blockLines[i].match(/\S/))
+//             return i;
+//     }
+// }
 
 let listNum = -1;
 
 let currentError = "";
 
-let calcList = (...numbers) => { numbers.forEach(number => { number = (+number + 1).toString().length; if (number > listNum) listNum = number; }); };
+function calcList(...numbers) {
+    numbers.forEach(number => {
+        number = (+number + 1).toString().length;
+        if (number > listNum)
+            listNum = number;
+    });
+}
 
-const calcListCheck = () => {
+function calcListCheck() {
     if (listNum == -1) throw "\x1b[1;31mYou forgot to call calcList when creating the error: " + currentError + ".\x1b[0m";
-};
+}
 
-const lineNum = number => {
+function lineNum(number) {
     calcListCheck();
-    return Color.blue + `${space(listNum - (+number + 1).toString().length + 1, " ")}${number + 1} | ` + Color.reset;
-};
+    return Color.blue + `${repeat(listNum - (+number + 1).toString().length + 1, " ")}${number + 1} | ` + Color.reset;
+}
 
-const emptyLine = () => {
+function emptyLine() {
     calcListCheck();
-    return Color.blue + ` ${space(listNum, " ")} | ` + Color.reset;
-};
+    return Color.blue + ` ${repeat(listNum, " ")} | ` + Color.reset;
+}
 
-const quoteLine = () => {
+function quoteLine() {
     calcListCheck();
-    return Color.darkGreen + ` ${space(listNum, " ")} * ` + Color.reset;
-};
+    return Color.darkGreen + ` ${repeat(listNum, " ")} * ` + Color.reset;
+}
 
-const helpLine = () => {
+function helpLine() {
     calcListCheck();
-    return Color.blue + ` ${space(listNum, " ")} - Help: ` + Color.reset;
-};
+    return Color.blue + ` ${repeat(listNum, " ")} - Help: ` + Color.reset;
+}
 
 function quoteFormat(block) {
     return quoteLine() + block.split("\n").join("\n" + quoteLine());
@@ -102,13 +110,13 @@ function lineFormat(startNumber, block) {
     return block.join("\n");
 }
 
-const insertLine = (block, line, toInsert) => {
+function insertLine(block, line, toInsert) {
     block = block.split("\n").filter(e => e);
     block.splice(line + 1, 0, toInsert);
     return block.join("\n");
-};
+}
 
-const insertLineFormat = (startNumber, block, line, toInsert) => {
+function insertLineFormat(startNumber, block, line, toInsert) {
     block = block.split("\n");
     let lineCount = 0;
     let hasPrinted = false;
@@ -121,19 +129,19 @@ const insertLineFormat = (startNumber, block, line, toInsert) => {
     }
     block.splice(line + 1, 0, emptyLine() + toInsert);
     return block.join("\n");
-};
+}
 
-const replaceLine = (block, line, replaceWith) => {
+function replaceLine(block, line, replaceWith) {
     block = block.split("\n");
     block[line] = replaceWith(block[line]);
     return block.join("\n");
-};
+}
 
-const replaceLines = (block, replaceWith) => {
+function replaceLines(block, replaceWith) {
     block = block.split("\n");
     block = block.map(line => replaceWith(line));
     return block.join("\n");
-};
+}
 
 const errors = {};
 
@@ -165,7 +173,7 @@ function formatPath(str) {
 }
 
 function relativeFormatPath(str) {
-    return formatPath(path.relative(getDirOf(getCurrentFile()), str));
+    return formatPath(path.relative(path.dirname(getCurrentFile()), str));
 }
 
 let errorListRead = false;
@@ -201,16 +209,16 @@ Error.log = (error, errorText) => {
 module.exports = {
     logError,
     readErrorList,
-    
+
     Color,
-    space,
+    repeat,
     constructError, constructLineCheck,
-    surroundingBlock, lastRealLine,
+    surroundingBlock,
     calcList, lineNum, emptyLine, quoteLine, quoteFormat, helpLine,
-    insertLine, insertLineFormat,
+    insertLine, lineFormat, insertLineFormat,
     replaceLine, replaceLines,
     formatPath, relativeFormatPath,
-    
+
     parseErrorPosition,
     errors
 };

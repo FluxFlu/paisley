@@ -1,0 +1,27 @@
+@Prefix Functions
+
+#Prefixes
+
+Often, in errors, things will be displayed with a "prefix" concatenated to the left of them, indicating the type of data being displayed.
+
+Prefix functions are used to do this.
+
+#The calcList function
+
+Before one uses most prefix functions, it is required that they call `calcList`.
+
+This function follows the syntax `calcList(...numbers)`. It takes a list of the potential numbers that will be displayed in the file, and sets up for future usage of prefix functions.
+
+The reason this function needs to exist is because all prefixes need to line up with those that display the line numbers in code blocks, which in turn need to be aligned so that values of different length (eg. 100 and 10) don't appear choppy when displayed next to each other.
+
+\n
+
+#The prefix functions themselves
+
+\n\n
+
+- `lineNum(num)` takes a number and returns a string containting a valid prefix for that line of code. An example would be `lineNum(45)` returning something like ` 45 | `.
+- `emptyLine()` is the same as `lineNum(num)`, but without the number.
+- `quoteLine()` is used when quoting things. It is a different color than the other prefixes, and looks like ` * `.
+- `quoteFormat(string)` is a utility function that takes a multi-line string and appends a `quoteLine()` to the beginning of each line in the string.
+- `helpLine()` is used to provide tips to users. It looks like ` - Help: `.

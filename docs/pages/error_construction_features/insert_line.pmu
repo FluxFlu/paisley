@@ -1,0 +1,9 @@
+@insertLine
+
+#The insertLine function
+
+The `insertLine` function is used to insert a single-line string into a larger multi-line string.
+
+It follows the syntax `insertLine(block, line, toInsert)`.
+
+The meaning of these parameters is very straightforward; the function inserts the single-line string `toInsert` at position `line` in the larger `block`, and then returns the result.

@@ -1,0 +1,13 @@
+@Color
+
+#The Color object
+
+The `Color` object has several properties, each corresponding to the ansii codes for colors used in errors.
+
+The following are the properties of the Color object:
+-   `red`
+-   `darkRed`
+-   `green`
+-   `darkGreen`
+-   `blue`
+-   `reset`

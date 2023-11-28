@@ -1,0 +1,7 @@
+@getCompilerFlag
+
+#The getCompilerFlag function
+
+The `getCompilerFlag` function returns the value of a given compiler flag.
+
+Note that this function will always return a string, even if the value is something like `"true"` or `"2"`.

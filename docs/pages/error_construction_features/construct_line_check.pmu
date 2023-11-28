@@ -1,0 +1,9 @@
+@constructLineCheck
+
+#The constructLineCheck function
+
+All errors use this function as the third part of `errorDetails`.
+
+This function follows the syntax `constructLineCheck(token)`.
+
+It returns a string used to represent the location in the file where the error occured, based on the location of the token argument.

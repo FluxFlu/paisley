@@ -2,11 +2,11 @@ const assert = require("node:assert/strict");
 
 const { token } = require("../../src/compilation_steps/tokenizer");
 const { finalize } = require("../../src/compilation_steps/final");
-const { setCompilerFlag, setRawFile } = require("../../paisley");
+const { setCompilerFlag, overwriteFileReader } = require("../../paisley");
 
 module.exports = (consoleStorage) => {
     setCompilerFlag("debug", "true");
-    setRawFile("TEST.sly", "300()");
+    overwriteFileReader(new Map([["TEST.sly", "300()"]]));
     const file = finalize("TEST.sly", [
         token("Number", "300", 0, 0),
         token("Operator", "(", 0, 3),

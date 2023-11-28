@@ -13,9 +13,8 @@
         "File ends while cooking.",
         constructLineCheck(token),
         constructError(
-            insertLineFormat(token.line, codeBlock, formattedLinePosition, space(token.character, " ") + Color.red + "^^ Cooking starts here" + Color.reset),
+            insertLineFormat(token.line, codeBlock, formattedLinePosition, repeat(token.character, " ") + Color.red + "^^ Cooking starts here and doesn't stop" + Color.reset),
             emptyLine(),
-            insertLineFormat(lastToken.line, lastCodeBlock, lastFormattedLinePosition, space(lastToken.character + lastToken.value.length, " ") + Color.red + "^ File ends here without closing angle braces" + Color.reset),
         )
     ];
 };

@@ -28,7 +28,7 @@
         `Invalid rest parameter used in macro definition.`,
         constructLineCheck(restToken),
         constructError(
-            insertLineFormat(restToken.line, codeBlock, formattedLinePosition, space(restToken.character, " ") + Color.red + space(restToken.value.length, "^") + " Invalid rest syntax." + Color.reset),
+            insertLineFormat(restToken.line, codeBlock, formattedLinePosition, repeat(restToken.character, " ") + Color.red + repeat(restToken.value.length, "^") + " Invalid rest syntax" + Color.reset),
             emptyLine(),
             helpLine() + "A macro definition can only have one rest parameter, and the rest parameter must be the last parameter in the macro definition.",
         )

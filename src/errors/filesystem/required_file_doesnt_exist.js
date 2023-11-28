@@ -60,7 +60,7 @@
         `Invalid file ${Color.red}\`${formatPath(filename)}\`${Color.reset}.`,
         constructLineCheck(token),
         constructError(
-            insertLineFormat(token.line, codeBlock, formattedLinePosition, space(nameToken.character, " ") + Color.red + space(lastNameToken.character - nameToken.character, "^") + " File doesn't exist." + Color.reset),
+            insertLineFormat(token.line, codeBlock, formattedLinePosition, repeat(nameToken.character, " ") + Color.red + repeat(lastNameToken.character - nameToken.character, "^") + " File doesn't exist." + Color.reset),
             emptyLine(),
             potentialFiles?.length ?
                 helpLine() + "Did you mean any of the following?" + "\n" +

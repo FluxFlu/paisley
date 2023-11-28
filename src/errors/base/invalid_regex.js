@@ -9,7 +9,7 @@
         "Invalid Regular Expression.",
         constructLineCheck(token),
         constructError(
-            insertLineFormat(token.line, codeBlock, formattedLinePosition, space(token.character, " ") + Color.red + space(token.value.length, "^") + " Invalid Regular Expression" + Color.reset),
+            insertLineFormat(token.line, codeBlock, formattedLinePosition, repeat(token.character, " ") + Color.red + repeat(token.value.length, "^") + " Invalid Regular Expression" + Color.reset),
             emptyLine(),
             emptyLine() + "The javascript error thrown was the following:",
             emptyLine(),

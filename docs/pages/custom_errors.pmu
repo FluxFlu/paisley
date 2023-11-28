@@ -8,5 +8,27 @@ Oftentimes, this code will have the potential to be used improperly. When that h
 
 Custom error features exist to help Paisley developers create readable errors that are in-line with the expectations of those using their code.
 
+#List of error construction features
+
 \n\n
--%./directives/error_log.html%Error.log%
+-%./error_construction_features/error_log.html%`Error.log()`%
+-%./error_construction_features/construct_error.html%`constructError()`%
+-%./error_construction_features/construct_line_check.html%`constructLineCheck()`%
+-%./error_construction_features/color.html%`Color`%
+-%./error_construction_features/repeat.html%`repeat()`%
+-%./error_construction_features/surrounding_block.html%`surroundingBlock()`%
+-%./error_construction_features/prefix_functions.html%`Prefix Functions`%
+-%./error_construction_features/insert_line.html%`insertLine()`%
+-%./error_construction_features/line_format.html%`lineFormat()`%
+-%./error_construction_features/insert_line_format.html%`insertLineFormat()`%
+-%./error_construction_features/replace_line.html%`replaceLine()`%
+-%./error_construction_features/replace_lines.html%`replaceLines()`%
+-%./error_construction_features/path_formatting.html%`Path Formatting`%
+
+#List of error utilities
+
+\n\n
+
+-%./error_utilities/spell_check.html%`spellCheck()`%
+-%./error_utilities/fs_utils.html%`Filesystem Utilities`%
+-%./error_utilities/get_compiler_flag.html%`getCompilerFlag`%

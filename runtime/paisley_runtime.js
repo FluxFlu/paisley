@@ -1,5 +1,5 @@
 const path = require("path");
-const { Color, space, constructError, constructLineCheck, surroundingBlock, lastRealLine, insertLine, replaceLine, formatPath, readErrorList, errors, parseErrorPosition } = require("../src/error");
+const { Color, repeat, constructError, constructLineCheck, surroundingBlock, insertLine, replaceLine, formatPath, readErrorList, errors, parseErrorPosition } = require("../src/error");
 const { logCompilerError, FILE_EXTENSION, getCurrentFile } = require("../paisley");
 const { Tokenize } = require("../src/compilation_steps/tokenizer");
 

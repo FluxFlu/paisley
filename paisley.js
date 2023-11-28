@@ -53,8 +53,6 @@ function setCompilerFlag(i, f) {
 const fileData = {
     currentFile: "",
     entryPoint: "",
-    rawText: {},
-    directories: {},
 };
 
 function getCurrentFile() {
@@ -73,20 +71,17 @@ function setOriginalFile(file) {
     fileData.entryPoint = file;
 }
 
+let fileReader;
+function overwriteFileReader(map) {
+    fileReader = map;
+}
+
 function getRawFile(filename) {
-    return fileData.rawText[filename];
-}
-
-function setRawFile(filename, data) {
-    fileData.rawText[filename] = data;
-}
-
-function getDirOf(filename) {
-    return fileData.directories[filename];
-}
-
-function setDirOf(filename, directory) {
-    fileData.directories[filename] = directory;
+    if (fileReader)
+        return fileReader.get(filename);
+    return fs.readFileSync(filename, "utf-8")
+        .replaceAll("\r\n", "\n")
+        .replaceAll("\r", "\n");
 }
 
 let errorLogged = false;
@@ -178,8 +173,7 @@ module.exports = {
     getCompilerFlag, setCompilerFlag,
     getCurrentFile, setCurrentFile,
     getOriginalFile, setOriginalFile,
-    getRawFile, setRawFile,
-    getDirOf, setDirOf,
+    getRawFile, overwriteFileReader,
     getErrorLogged, setErrorLogged,
     logUsageError, logCompilerError, printAborting,
     writeFile,
