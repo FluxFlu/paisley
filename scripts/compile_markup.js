@@ -151,7 +151,7 @@ function traverseAndCompile(dir) {
     if (path.extname(dir) == ".pmu") {
         fs.writeFileSync(dir.replaceAll(".pmu", ".html"), compileMarkdownFile(fs.readFileSync(dir, "utf-8"), dir));
         if (shouldDeleteFiles)
-            fs.rmSync(dir)
+            fs.rmSync(dir);
     } else if (fs.statSync(dir).isDirectory()) {
         fs.readdirSync(dir).forEach(subdirectory => {
             traverseAndCompile(path.join(dir, subdirectory));
