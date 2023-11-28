@@ -1,4 +1,5 @@
 const { logError } = require("../error");
+const { evaluate } = require("../util/eval");
 const { definitions } = require("./flag");
 const { token } = require("./tokenizer");
 
@@ -78,8 +79,8 @@ function handleDefinitions(filename, file) {
             if (params.length > macro.params.length) {
                 params.rest = [token("Operator", "[", firstToken.line, firstToken.character)];
                 while (params.length > macro.params.length) {
-                    params.at(-1).forEach(e => params.rest.push(e));
-                    params.pop();
+                    params[0].forEach(e => params.rest.push(e));
+                    params.shift();
                     if (params.length !== macro.params.length) {
                         const lastParam = params.rest.at(-1);
                         params.rest.push(token("Operator", ",", lastParam.line, lastParam.character));
@@ -96,7 +97,9 @@ function handleDefinitions(filename, file) {
                     for (let f = 0; f < params.rest.length; f++) {
                         const n = params.rest[f];
                         start++;
-                        file.splice(i++, 0, n.copy());
+                        const copy = n.copy();
+                        copy.macroResult = true;
+                        file.splice(i++, 0, copy);
                     }
                     start--;
                     i--;
@@ -108,7 +111,9 @@ function handleDefinitions(filename, file) {
                         for (let f = 0; f < params[j].length; f++) {
                             const n = params[j][f];
                             start++;
-                            file.splice(i++, 0, n.copy());
+                            const copy = n.copy();
+                            copy.macroResult = true;
+                            file.splice(i++, 0, copy);
                         }
                         start--;
                         i--;
@@ -117,10 +122,16 @@ function handleDefinitions(filename, file) {
                     }
                 }
                 if (!replacement) {
-                    if (macro.code.length == i - start + 1)
-                        file.splice(i, 0, token(t.type, t.value, finalToken.line, finalToken.character));
-                    else
-                        file.splice(i, 0, token(t.type, t.value, firstToken.line, firstToken.character));
+                    let tokenToAdd = token(t.type, t.value);
+                    if (macro.code.length == i - start + 1) {
+                        tokenToAdd.line = finalToken.line;
+                        tokenToAdd.character = finalToken.character;
+                    } else {
+                        tokenToAdd.line = firstToken.line;
+                        tokenToAdd.character = firstToken.character;
+                    }
+                    tokenToAdd.macroResult = true;
+                    file.splice(i, 0, tokenToAdd);
                 }
                 i++;
             }
@@ -148,6 +159,7 @@ function handleDefinitions(filename, file) {
                     brack--;
                     if (brack == 0) {
                         finalToken = file[i].copy();
+                        finalToken.macroResult = true;
                         break;
                     }
                 }
@@ -156,7 +168,7 @@ function handleDefinitions(filename, file) {
             const paramFormat = endFormat(params);
             const toEval = "((" + procedure.param + ") => {" + procedure.code.map(e => e.value).join(" ") + "})(" + paramFormat + ")";
             try {
-                const out = eval(toEval);
+                const out = evaluate(toEval);
                 file.splice(i, 0, token("CookedValue", endFormat(out), firstToken.line, firstToken.character));
             } catch (e) {
                 finalToken.character++;

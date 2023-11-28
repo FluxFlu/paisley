@@ -1,5 +1,5 @@
 const { logError } = require("../error");
-const { token } = require("./token");
+const { token } = require("../util/token");
 const { parseDestructure } = require("./tokenizer/parse_destructure");
 
 const operatorList = ["(", ")", "#", "=>", "==>", "+", "-", "=", "*", "**", "/", "~", "^", "|", "&", "<<", ">>", ">>>", "%", "||", "&&", "++", "--", "!", "{", "}", "<", ">", "<=", ">=", "!==", "===", "==", "!=", "+=", "-=", "*=", "/=", "%=", "**=", "||=", ",", "&&=", "^=", "&=", "|=", ">>=", ">>>=", "<<=", ":", "[", "]", "$"];
@@ -224,7 +224,7 @@ function Tokenize(filename, string) {
             let outToken = token("RegExp", currentToken, lineBreaks, character);
 
             try {
-                eval(currentToken);
+                global.eval(currentToken);
             } catch (error) {
                 logError("invalid_regex", outToken, error);
             }

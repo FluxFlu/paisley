@@ -1,4 +1,5 @@
 const { logError } = require("../error");
+const { evaluate } = require("../util/eval");
 const { handleDefinitions, endFormat } = require("./sub_definitions");
 const { token, nonValue } = require("./tokenizer");
 
@@ -29,7 +30,7 @@ function cook(filename, file) {
                 .map(e => e.value)
                 .join(" ");
             try {
-                const out = eval(toCook);
+                const out = evaluate(toCook);
                 file.splice(i, 0, token("CookedValue", endFormat(out), firstToken.line, firstToken.character));
             } catch (e) {
                 firstToken.character += 2;

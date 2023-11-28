@@ -1,4 +1,9 @@
 (firstToken, lastToken, error) => {
+    
+    if (firstToken.macroResult || lastToken.macroResult) {
+        throw error;
+    }
+
     calcList(firstToken.line);
     const originalFile = getRawFile(getCurrentFile());
     const errorHelp = (
@@ -31,13 +36,17 @@
     } else {
         const format = surroundingBlock(originalFile, lastToken.line, true, lastToken.line - firstToken.line + 1);
         const codeBlock = format[0];
-        let longerString = (lastToken.character > firstToken.character ? lastToken.character : firstToken.character);
+        let longestStringLength = 0;
+        codeBlock.split("\n").forEach(line => {
+            if (line.length > longestStringLength)
+                longestStringLength = line.length;
+        })
         return [
             false,
             "Failure to cook.",
             constructLineCheck(firstToken),
             constructError(
-                lineFormat(firstToken.line, replaceLines(codeBlock, e => e + space((longerString < e.length + 3 ? e.length : longerString) - e.length + 3, " ") + Color.red + "]" + Color.reset)) + Color.red + "  Compile-time error occurs here" + Color.reset,
+                lineFormat(firstToken.line, replaceLines(codeBlock, e => e + space(longestStringLength - e.length + 3, " ") + Color.red + "]" + Color.reset)) + Color.red + "  Compile-time error occurs here" + Color.reset,
                 emptyLine(),
                 emptyLine() + "The javascript error thrown was the following:",
                 emptyLine(),

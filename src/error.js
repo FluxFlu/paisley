@@ -157,7 +157,7 @@ function parseErrorPosition(error) {
     error = error[0];
     const character = +error.slice(error.lastIndexOf(":") + 1, -1) - 1;
     const line = +error.slice(error.slice(0, error.lastIndexOf(":")).lastIndexOf(":") + 1, error.lastIndexOf(":")) - 1;
-    return {line, character}
+    return { line, character }
 }
 
 function formatPath(str) {
@@ -190,12 +190,27 @@ function logError(error, ...args) {
     }
 }
 
+Error.log = (error, errorText) => {
+    console.error(Color.darkRed + "Error[" + error + "]: " + Color.reset + errorText[1] + "\n# " + formatPath(getCurrentFile()) + errorText[2] + "\n\n" + errorText[3]);
+    if (errorText[0]) {
+        console.log("Aborting...\n");
+        process.exit(1);
+    }
+}
+
 module.exports = {
-    Color,
     logError,
     readErrorList,
-    space, constructError, constructLineCheck, surroundingBlock, lastRealLine, insertLine, replaceLine,
-    parseErrorPosition,
+    
+    Color,
+    space,
+    constructError, constructLineCheck,
+    surroundingBlock, lastRealLine,
+    calcList, lineNum, emptyLine, quoteLine, quoteFormat, helpLine,
+    insertLine, insertLineFormat,
+    replaceLine, replaceLines,
     formatPath, relativeFormatPath,
+    
+    parseErrorPosition,
     errors
 };
