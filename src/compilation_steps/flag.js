@@ -31,7 +31,7 @@ function handleFlag(compile, filename, line) {
         if (flag[i] == "]") {
             brack--;
         }
-        if (validTypes[line[i].type])
+        if (validTypes[line[i].type] || line[i].type == "LineBreak")
             values[value].push(line[i]);
         if (!brack) {
             values[value] = values[value].slice(1, -1);

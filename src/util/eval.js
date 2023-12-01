@@ -14,8 +14,11 @@ const { getCompilerFlag, getRawFile, getCurrentFile, getOriginalFile } = require
 const { traverseDir } = require("../error_utils/fileUtils");
 const { spellCheck } = require("../error_utils/spellCheck");
 
+const emptyWriteValue = Symbol();
+const writeEmpty = () => emptyWriteValue;
+
 function evaluate(code) {
     return eval(code);
 }
 
-module.exports = { evaluate }
+module.exports = { evaluate, emptyWriteValue }

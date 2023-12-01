@@ -1,5 +1,6 @@
 const { logError } = require("../error");
-const { evaluate } = require("../util/eval");
+const { evaluate, emptyWriteValue } = require("../util/eval");
+const { finalize } = require("./final");
 const { definitions } = require("./flag");
 const { token } = require("./tokenizer");
 
@@ -165,16 +166,19 @@ function handleDefinitions(filename, file) {
                 }
                 params.push(file[i]);
             }
+
             const paramFormat = endFormat(params);
-            const toEval = "((" + procedure.param + ") => {" + procedure.code.map(e => e.value).join(" ") + "})(" + paramFormat + ")";
+            const toEval = "((" + procedure.param + ") => {" + finalize(filename, procedure.code) + "})(" + paramFormat + ")";
+
+            file.splice(i, 1);
             try {
                 const out = evaluate(toEval);
-                file.splice(i, 0, token("CookedValue", endFormat(out), firstToken.line, firstToken.character));
+                if (out !== emptyWriteValue)
+                    file.splice(i, 0, token("CookedValue", String(out), firstToken.line, firstToken.character));
             } catch (e) {
                 finalToken.character++;
                 logError("procedure_js_error", procedure, firstToken, finalToken, e);
             }
-            file.splice(i + 1, 1);
             i--;
         }
     }

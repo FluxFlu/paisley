@@ -31,7 +31,7 @@ console.log(format(one two three));
 This will compile to:
 
 ```
-console.log("\"one\", \"two\", \"three\"");
+console.log("one", "two", "three");
 ```
 
 \n\n
@@ -56,3 +56,42 @@ The `value` property represents the value of the token.
 The `line` and `character` properties represent the original position of the token in the file.
 
 The tokens also have the `copy` method, which allows one to create a shallow copy of the token.
+
+#The writeEmpty function
+
+The `writeEmpty` function is used to indicate that a procedure should be compiled as nothing.
+
+If one returns `undefined` or `null` from a procedure, for example, that value will still be written to the resulting file.
+
+```
+#procedure add[tokens] [
+    const numbers = tokens.map(e => +e.value);
+    if (!numbers.some(isNaN))
+        return `console.log(${numbers.reduce((a, b) => a + b))})`
+]
+
+add(5 50 f)
+```
+
+When compiled, this will result in the following:
+
+```
+undefined
+```
+
+This occurs because the `add(tokens)` procedure has no return value, meaning it returns `undefined`.
+
+In order to prevent this, the procedure might be rewritten as follows:
+
+```
+#procedure add[tokens] [
+    const numbers = tokens.map(e => +e.value);
+    if (!numbers.some(isNaN))
+        return `console.log(${numbers.reduce((a, b) => a + b))})`
+    return writeEmpty();
+]
+
+add(5 50 f)
+```
+
+This will be compiled to a completely empty file.
