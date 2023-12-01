@@ -13,6 +13,7 @@ const { getCompilerFlag, getRawFile, getCurrentFile, getOriginalFile } = require
 
 const { traverseDir } = require("../error_utils/fileUtils");
 const { spellCheck } = require("../error_utils/spellCheck");
+const { finalize } = require("../compilation_steps/final");
 
 const emptyWriteValue = Symbol();
 const writeEmpty = () => emptyWriteValue;

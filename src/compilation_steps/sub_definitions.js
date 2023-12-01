@@ -168,7 +168,9 @@ function handleDefinitions(filename, file) {
             }
 
             const paramFormat = endFormat(params);
-            const toEval = "((" + procedure.param + ") => {" + finalize(filename, procedure.code) + "})(" + paramFormat + ")";
+            const toEval = "let paramFormat = " + paramFormat + ";" +
+                `paramFormat.toString = ()=>${endFormat(paramFormat)};` +
+                "((" + procedure.param + ") => {" + finalize(filename, procedure.code) + "})(paramFormat)";
 
             file.splice(i, 1);
             try {
