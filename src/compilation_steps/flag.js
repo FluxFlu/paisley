@@ -1,9 +1,9 @@
 const path = require("node:path");
-const { getCompilerFlag, writeFile, setCurrentFile, FILE_EXTENSION } = require("../../paisley");
+const crypto = require("crypto");
+const { getCompilerFlag, writeFile, setCurrentFile, FILE_EXTENSION, linkNameMap } = require("../../paisley");
 const { logError, formatPath } = require("../error");
 const { variables } = require("./tokenizer");
 const { validTypes } = require("./final");
-
 
 const definitions = {};
 const publicDefinitions = {};
@@ -102,6 +102,14 @@ function handleFlag(compile, filename, line) {
                         final += "}";
                         break;
                     }
+                    case "link": {
+                        final += linkNameMap.get(filename.replaceAll(FILE_EXTENSION, ".js")) + "={";
+                        let i = 0;
+                        while (i < realVariables.length - 1) final += realVariables[i++] + ",";
+                        final += realVariables.at(-1);
+                        final += "}";
+                        break;
+                    }
                 }
             }
             publicDefinitions[filename] = Object.fromEntries(Object.entries(definitions[filename]).filter(e => flag.includes(e[1].value)));
@@ -119,8 +127,11 @@ function handleFlag(compile, filename, line) {
             if (!path.extname(relativePath))
                 relativePath = relativePath + ".sly";
             const from = path.join(path.dirname(filename), relativePath);
+            const to = from.replaceAll(FILE_EXTENSION, ".js");
 
-            writeFile(from.replaceAll(FILE_EXTENSION, ".js"), compile(from, [copyLine]));
+            linkNameMap.set(to, "_" + crypto.randomBytes(6).toString("hex"));
+            
+            writeFile(to, compile(from, [copyLine]));
             setCurrentFile(filename);
 
             if (!publicDeclarations[from])
@@ -165,6 +176,13 @@ function handleFlag(compile, filename, line) {
                         final += realVariables.at(-1);
                         final += "} from \"" + formatPath(relativePath.replaceAll(FILE_EXTENSION, ".js")) + "\"";
                         break;
+                    }
+                    case "link": {
+                        final += "const {";
+                        let i = 0;
+                        while (i < realVariables.length - 1) final += realVariables[i++] + ",";
+                        final += realVariables.at(-1);
+                        final += "} = " + linkNameMap.get(to);
                     }
                 }
             }

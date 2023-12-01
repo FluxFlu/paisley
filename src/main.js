@@ -1,7 +1,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 
-const { getCompilerFlag, FILE_EXTENSION, logUsageError, setCompilerFlag, writeFile, getErrorLogged, printAborting, setOriginalFile } = require("../paisley");
+const { getCompilerFlag, FILE_EXTENSION, logUsageError, setCompilerFlag, writeFile, getErrorLogged, printAborting, setOriginalFile, writeLinkedFile } = require("../paisley");
 const { compile } = require("./compile");
 
 function printFileLocation(fileLocation) {
@@ -65,6 +65,9 @@ function main() {
 
     for (let i = 0; i < args.length; i += 2) setCompilerFlag(args[i].slice(2), args[i + 1]);
 
+    if (getCompilerFlag("type") == "link" && getCompilerFlag("debug") == "true")
+        logUsageError("link_with_debug");
+
     if (!filename || filename[0] == "-" || filename.slice(filename.lastIndexOf(".")) !== FILE_EXTENSION && getCompilerFlag("use-abnormal-filenames") !== "true")
         logUsageError("invalid_filename", filename);
 
@@ -88,6 +91,9 @@ function main() {
     }
 
     writeFile(outfile, file);
+
+    if (getCompilerFlag("type") == "link")
+        writeLinkedFile(outfile);
 
     // chmod +x
     if (getCompilerFlag("make-script") == "true")

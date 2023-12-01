@@ -17,6 +17,7 @@ The `type` compiler flag determines which type of js the program is to be compil
 Options are:
 - commonjs
 - ecmascript
+- link
 
 Default is `commonjs`.
 

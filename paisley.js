@@ -114,6 +114,9 @@ const usageErrors = {
         note + "Keep in mind that the filename must be the first argument, and must end in `" + FILE_EXTENSION + "`.",
         note + "You can compile alternative filenames by passing the flag \x1b[1;34m`--use-abnormal-filenames true`\x1b[0;m.",
     ],
+    "link_with_debug": () => [
+        "Unable to use `--type link` with `--debug true`.",
+    ],
     "invalid_compiler_flag": flag => {
         if (!spellCheck)
             spellCheck = require("./src/error_utils/spellCheck").spellCheck;
@@ -163,8 +166,23 @@ function logCompilerError(error, originalThrow, ...args) {
 }
 
 const fs = require("node:fs");
+
+let outFile = "";
+const linkNameMap = new Map();
+
+function writeLinkedFile(name) {
+    fs.writeFileSync(name, outFile);
+}
+
 function writeFile(name, text) {
     if (getErrorLogged()) return;
+    if (getCompilerFlag("type") == "link") {
+        if (!linkNameMap.get(name))
+            return outFile += text;
+        if (outFile != "")
+            outFile += "\n";
+        return outFile += `let ${linkNameMap.get(name)};{${text}}`;
+    }
     fs.writeFileSync(name, text);
 }
 
@@ -176,7 +194,7 @@ module.exports = {
     getRawFile, overwriteFileReader,
     getErrorLogged, setErrorLogged,
     logUsageError, logCompilerError, printAborting,
-    writeFile,
+    writeFile, writeLinkedFile, linkNameMap,
 };
 
 if (require.main == module) {
