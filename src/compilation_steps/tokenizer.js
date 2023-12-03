@@ -2,14 +2,14 @@ const { logError } = require("../error");
 const { token } = require("../util/token");
 const { parseDestructure } = require("./tokenizer/parse_destructure");
 
-const operatorList = ["(", ")", "#", "=>", "==>", "+", "-", "=", "*", "**", "/", "~", "^", "|", "&", "<<", ">>", ">>>", "%", "||", "&&", "++", "--", "!", "{", "}", "<", ">", "<=", ">=", "!==", "===", "==", "!=", "+=", "-=", "*=", "/=", "%=", "**=", "||=", ",", "&&=", "^=", "&=", "|=", ">>=", ">>>=", "<<=", ":", "[", "]", "$"];
+const operatorList = ["(", ")", "?", "#", "=>", "==>", "+", "-", "=", "*", "**", "/", "~", "^", "|", "&", "<<", ">>", ">>>", "%", "||", "&&", "++", "--", "!", "{", "}", "<", ">", "<=", ">=", "!==", "===", "==", "!=", "+=", "-=", "*=", "/=", "%=", "**=", "||=", ",", "&&=", "^=", "&=", "|=", ">>=", ">>>=", "<<=", ":", "[", "]", "$"];
 
 const variables = {};
 
 const nonValue = { Operator: true, Separator: true, LineBreak: true };
 
 function isOperatorCharacter(str) {
-    return str.match(/[#(){}[\].+=\-*/~^%!&|,<>:$]/);
+    return str.match(/[#(){}[\].+=\-*/~^%!&|,<>:$?]/);
 }
 
 function Tokenize(filename, string) {
