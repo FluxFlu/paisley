@@ -52,13 +52,13 @@ function printDocLink(docObj) {
 }
 
 function readDocsDirectory() {
-    const baseDir = fs.readdirSync(path.join(__dirname, "/errors"));
+    const baseDir = fs.readdirSync(path.join(__dirname, "/error/errors"));
     const ret = {};
     baseDir.forEach(dir => {
         if (path.extname(dir) == ".json") {
             return;
         }
-        const obj = JSON.parse(fs.readFileSync(path.join(__dirname, "/errors", dir, dir + ".json"), "utf-8"));
+        const obj = JSON.parse(fs.readFileSync(path.join(__dirname, "/error/errors", dir, dir + ".json"), "utf-8"));
         Object.keys(obj).forEach(key => {
             ret[key] = obj[key];
         });
