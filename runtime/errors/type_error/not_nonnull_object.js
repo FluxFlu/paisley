@@ -3,7 +3,7 @@
     const token = parseErrorPosition(context.error);
     const tokenLocation = context.locationMap[token.line + ":" + token.character];
     if (!tokenLocation) {
-        logCompilerError("generic", "Token location in original file does not exist", "Token location in original file does not exist");
+        compilerError("Token location in original file does not exist.");
     }
     token.line = +tokenLocation.split(":")[0];
     token.character = +tokenLocation.split(":")[1];

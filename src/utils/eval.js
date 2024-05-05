@@ -7,19 +7,16 @@ const {
     insertLine, lineFormat, insertLineFormat,
     replaceLine, replaceLines,
     formatPath, relativeFormatPath
-} = require("../error");
+} = require("../error/error");
 
-const { getCompilerFlag, getRawFile, getCurrentFile, getOriginalFile } = require("../../paisley");
-
-const { traverseDir } = require("../error_utils/fileUtils");
-const { spellCheck } = require("../error_utils/spellCheck");
+const { traverseDir } = require("../error/error_utils/fileUtils");
+const { spellCheck } = require("../error/error_utils/spellCheck");
 const { finalize } = require("../compilation_steps/final");
-
-const emptyWriteValue = Symbol();
-const writeEmpty = () => emptyWriteValue;
+const { getCompilerFlag } = require("./compiler_flags");
+const { getRawFile, getCurrentFile, getOriginalFile } = require("./file_data");
 
 function evaluate(code) {
     return eval(code);
 }
 
-module.exports = { evaluate, emptyWriteValue }
+module.exports = { evaluate }

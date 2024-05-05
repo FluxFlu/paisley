@@ -1,0 +1,5 @@
+{
+    "failure_to_cook": "cook",
+    "procedure_js_error": "procedure",
+    "procedure_output_not_string": "procedure"
+}

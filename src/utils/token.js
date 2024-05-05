@@ -15,8 +15,9 @@ class Token {
     copy() {
         const copy = new Token(this.type, this.value, this.line, this.character);
         Token.potentialAttributes.forEach(attribute => {
-            if (this[attribute] !== undefined)
+            if (this[attribute] !== undefined) {
                 copy[attribute] = this[attribute];
+            }
         });
         return copy;
     }

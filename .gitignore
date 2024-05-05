@@ -1,6 +1,7 @@
 test.*
 
 node_modules
+package-lock.json
 
 *.html
 !index.html

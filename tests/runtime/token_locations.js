@@ -2,7 +2,9 @@ const assert = require("node:assert/strict");
 
 const { token } = require("../../src/compilation_steps/tokenizer");
 const { finalize } = require("../../src/compilation_steps/final");
-const { setCompilerFlag, overwriteFileReader } = require("../../paisley");
+const { RESET, BOLD_RED, BOLD_BLUE, RED } = require("../../src/utils/colors");
+const { overwriteFileReader } = require("../../src/utils/file_data");
+const { setCompilerFlag } = require("../../src/utils/compiler_flags");
 
 module.exports = (consoleStorage) => {
     setCompilerFlag("debug", "true");
@@ -19,12 +21,12 @@ module.exports = (consoleStorage) => {
             {
                 type: "Error",
                 args: [
-                    "\x1B[1;31mRuntimeError[not_a_function]: \x1B[0m\"300\" is not a function.\n" +
+                    BOLD_RED + "RuntimeError[not_a_function]: " + RESET + "\"300\" is not a function.\n" +
                     "# ./tests/runtime/token_locations.sly:1:4\n" +
                     "\n" +
-                    "\x1B[1;34m 1 | \x1B[0m300()\n" +
-                    "\x1B[1;34m   | \x1B[0m   \x1B[0;31m^ Attempted to call non-function value here\x1B[0m\n" +
-                    "\x1B[1;34m   | \x1B[0m\n"
+                    `${BOLD_BLUE} 1 | ${RESET}300()\n` +
+                    `${BOLD_BLUE}   | ${RESET}   ${RED}^ Attempted to call non-function value here${RESET}\n` +
+                    `${BOLD_BLUE}   | ${RESET}\n`
                 ],
             },
         ]

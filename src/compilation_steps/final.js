@@ -1,5 +1,6 @@
 const path = require("path");
-const { getCompilerFlag, getRawFile } = require("../../paisley");
+const { getCompilerFlag } = require("../utils/compiler_flags");
+const { getRawFile } = require("../utils/file_data");
 
 const validTypes = { Identifier: true, RegExp: true, Number: true, BigInt: true, Operator: true, Separator: true, String: true, Variable: true, PostFlag: true, CookedValue: true, TokenGroup: true };
 
@@ -41,8 +42,9 @@ function finalize(filename, file) {
         if (validTypes[token.type]) {
             locationMap[line + ":" + character] = token.line + ":" + token.character;
             final += token.value;
-            if (token.value.length)
+            if (token.value.length) {
                 character += token.value.length;
+            }
         }
         if (
             token.value == "\n" &&
@@ -57,7 +59,7 @@ function finalize(filename, file) {
             character = 0;
             line++;
         }
-        if (token.type == "Identifier" && file[i + 1] && file[i + 1].type == "Identifier") {
+        if (token.type == "Identifier" && file[i + 1] && file[i + 1].type != "Operator") {
             final += " ";
             character++;
         }

@@ -2,16 +2,17 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
-const { Color } = require("../src/error");
+const { Color } = require("../src/error/error");
 
 function pad(str, len) {
-    while (len > str.length)
+    while (len > str.length) {
         str = " " + str;
+    }
     return str;
 }
 
 const print = console.log;
-let consoleStorage = [];
+const consoleStorage = [];
 const logStorage = type => (...args) => {
     consoleStorage.push(
         {

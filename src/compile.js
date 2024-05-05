@@ -6,9 +6,10 @@ const { finalize } = require("./compilation_steps/final");
 const { handleFlag, definitions, publicDefinitions } = require("./compilation_steps/flag");
 const { handleDefinitions } = require("./compilation_steps/sub_definitions");
 const { Tokenize, token } = require("./compilation_steps/tokenizer");
-const { setCurrentFile, logUsageError } = require("../paisley");
-const { logError } = require("./error");
+const { logError } = require("./error/error");
 const { stripSingleLineComments } = require("./compilation_steps/strip_single_line_comments");
+const { setCurrentFile } = require("./utils/file_data");
+const { logUsageError } = require("./error/usage_error");
 
 function compile(filename, requireValues) {
 
@@ -41,10 +42,13 @@ function compile(filename, requireValues) {
         if (currentToken.value == "#" && file[i + 1]) {
             const flag = [];
             const back = i;
-            let brack = 0;
-            while (file[i] && (file[i].type != "LineBreak" || brack)) {
-                if (file[i].value == "[") brack++;
-                if (file[i].value == "]") brack--;
+            let braceCount = 0;
+            while (file[i] && (file[i].type != "LineBreak" || braceCount)) {
+                if (file[i].value == "[") {
+                    braceCount++;
+                } else if (file[i].value == "]") {
+                    braceCount--;
+                }
                 flag.push(file.splice(i, 1)[0]);
             }
             const flagOut = handleFlag(compile, filename, flag, i);

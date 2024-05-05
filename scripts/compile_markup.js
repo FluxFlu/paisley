@@ -22,12 +22,14 @@ function compileMarkdownFile(code, currentPath) {
         // This means that the only lines with spaces at the beginning will have had them added artificially.
         // Notably relevant to newline handling.
         // We use a while loop to handle the case of multiple space characters.
-        while (!isLiteral && code[i] == "\n" && code[i + 1] == " ")
+        while (!isLiteral && code[i] == "\n" && code[i + 1] == " ") {
             code = code.slice(0, i) + "\n" + code.slice(i + 1);
+        }
         
         // Each time we see a "```", we alternate between being literal and non-literal.
-        if (code[i] == "`" && code[i + 1] == "`" && code[i + 2] == "`")
+        if (code[i] == "`" && code[i + 1] == "`" && code[i + 2] == "`") {
             isLiteral = !isLiteral;
+        }
         // If we are currently non-literal, and we see a "`" that isn't a "```", replace it with a <cb> tag.
         else if (!isLiteral && code[i] == "`" && code[i + 1] != "`" && code[i - 1] != "`") {
             code = code.slice(0, i) + (codeBlockTagIsOpen ? "</cb>" : "<cb>") + code.slice(i + 1);
@@ -64,8 +66,9 @@ function compileMarkdownFile(code, currentPath) {
     let currentlyList = false;
     for (let i = 0; i < code.length; i++) {
         let line = code[i];
-        if (line == "")
+        if (line == "") {
             continue;
+        }
         
         // Add <ul> and </ul> to the beginning and end of lists respectively.
         if (line[0] == "-" && !currentlyList) {
@@ -150,8 +153,9 @@ function traverseAndCompile(dir) {
     }
     if (path.extname(dir) == ".pmu") {
         fs.writeFileSync(dir.replaceAll(".pmu", ".html"), compileMarkdownFile(fs.readFileSync(dir, "utf-8"), dir));
-        if (shouldDeleteFiles)
+        if (shouldDeleteFiles) {
             fs.rmSync(dir);
+        }
     } else if (fs.statSync(dir).isDirectory()) {
         fs.readdirSync(dir).forEach(subdirectory => {
             traverseAndCompile(path.join(dir, subdirectory));

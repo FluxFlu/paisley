@@ -1,4 +1,4 @@
-const { getCompilerFlag } = require("../../paisley");
+const { getCompilerFlag } = require("../../utils/compiler_flags");
 
 const keyboards = {
     "qwerty": [
@@ -30,8 +30,9 @@ const keyboards = {
 function calcTypoVector(keyboard, letter) {
     letter = letter.toUpperCase();
     const vec = { x: keyboard.findIndex(e => e.includes(letter)) };
-    if (vec.x == -1)
+    if (vec.x == -1) {
         return null;
+    }
     vec.y = keyboard[vec.x].indexOf(letter);
     return vec;
 }
@@ -40,20 +41,24 @@ function typoCheck(i, f) {
     const keyboard = keyboards[getCompilerFlag("keyboard-layout")];
     const vec1 = calcTypoVector(keyboard, i);
     const vec2 = calcTypoVector(keyboard, f);
-    if (!vec1 || !vec2)
+    if (!vec1 || !vec2) {
         return false;
+    }
     const distanceVector = { x: Math.abs(vec1.x - vec2.x), y: Math.abs(vec1.y - vec2.y) };
     
     return Math.hypot(distanceVector) <= +getCompilerFlag("typo-threshold");
 }
 
 function spellCheck(listOfValidValues, value) {
-    if (value.length < 3)
+    if (value.length < 3) {
         return [];
+    }
     const accepted = [];
     for (let i = 0; i < listOfValidValues.length; i++) {
         const currentValue = listOfValidValues[i];
-        if (Math.abs(value.length - currentValue.length) > 2) continue;
+        if (Math.abs(value.length - currentValue.length) > 2) {
+            continue;
+        }
         let bigger = currentValue;
         let smaller = value;
         if (value.length > currentValue.length) {
@@ -62,8 +67,12 @@ function spellCheck(listOfValidValues, value) {
         }
         let errors = 0;
         for (let i = 0; i < bigger.length; i++) {
-            if (errors > +getCompilerFlag("error-threshold")) break;
-            if (smaller[i] == bigger[i]) continue;
+            if (errors > +getCompilerFlag("error-threshold")) {
+                break;
+            }
+            if (smaller[i] == bigger[i]) {
+                continue;
+            }
             if (!smaller[i]) {
                 errors++;
                 continue;
@@ -82,7 +91,9 @@ function spellCheck(listOfValidValues, value) {
                 continue;
             }
         }
-        if (errors > +getCompilerFlag("error-threshold")) continue;
+        if (errors > +getCompilerFlag("error-threshold")) {
+            continue;
+        }
         accepted.push(currentValue);
     }
     return accepted;

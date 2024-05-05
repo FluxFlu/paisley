@@ -1,8 +1,8 @@
-const terminateCharacters = {";": true};
+const terminateCharacters = { ";": true };
 
-const slightTerminateCharacters = {")": true, ",": true};
+const slightTerminateCharacters = { ")": true, ",": true };
 
-const { logError } = require("../error");
+const { logError } = require("../error/error");
 const { token } = require("./tokenizer");
 
 function handleEarlyFunctions(filename, file) {
@@ -15,13 +15,16 @@ function handleEarlyFunctions(filename, file) {
             i--;
             if (file[i].value == ")") {
                 const firstToken = file[i];
-                let brack = -1;
-                for (curr.push(file.splice(i--, 1)[0]); brack; i--) {
+                let braceCount = -1;
+                for (curr.push(file.splice(i--, 1)[0]); braceCount; i--) {
                     if (!file[i]) {
                         logError("unbalanced_lambda_braces", firstToken);
                     }
-                    if (file[i].value == "(") brack++;
-                    if (file[i].value == ")") brack--;
+                    if (file[i].value == "(") {
+                        braceCount++;
+                    } else if (file[i].value == ")") {
+                        braceCount--;
+                    }
                     curr.unshift(file.splice(i, 1)[0]);
                 }
                 i++;
@@ -31,24 +34,30 @@ function handleEarlyFunctions(filename, file) {
             curr.push(token("Operator", "=>"));
             const firstToken = file[i];
             if (file[i].value == "{") {
-                let brack = 1;
+                let braceCount = 1;
                 curr.push(file.splice(i, 1)[0]);
-                while (brack) {
+                while (braceCount) {
                     if (!file[i]) {
                         logError("unbalanced_lambda_braces", firstToken);
                     }
-                    if (file[i].value == "{") brack++;
-                    if (file[i].value == "}") brack--;
+                    if (file[i].value == "{") {
+                        braceCount++;
+                    } else if (file[i].value == "}") {
+                        braceCount--;
+                    }
                     curr.push(file.splice(i, 1)[0]);
                 }
             } else {
-                let brack = 0;
-                while (!(terminateCharacters[file[i].value] || slightTerminateCharacters[file[i].value] && !brack)) {
+                let braceCount = 0;
+                while (!(terminateCharacters[file[i].value] || slightTerminateCharacters[file[i].value] && !braceCount)) {
                     if (!file[i]) {
                         logError("unbalanced_lambda_braces", firstToken);
                     }
-                    if (file[i].value == "(") brack++;
-                    if (file[i].value == ")") brack--;
+                    if (file[i].value == "(") {
+                        braceCount++;
+                    } else if (file[i].value == ")") {
+                        braceCount--;
+                    }
                     curr.push(file.splice(i, 1)[0]);
                 }
             }

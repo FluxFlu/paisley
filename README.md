@@ -15,7 +15,7 @@ $ npm i paisley -g
 Paisley is run with the syntax `paisley [file.sly] options`.
 
 ```sh
-$ paisley example.sly --throw-for-errors true
+$ paisley example.sly --debug true
 ```
 
 # Syntax

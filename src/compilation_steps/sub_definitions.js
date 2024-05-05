@@ -1,8 +1,8 @@
-const { logError } = require("../error");
-const { evaluate, emptyWriteValue } = require("../util/eval");
+const { logError } = require("../error/error");
+const { evaluate } = require("../utils/eval");
 const { finalize } = require("./final");
 const { definitions } = require("./flag");
-const { token } = require("./tokenizer");
+const { token, Tokenize } = require("./tokenizer");
 
 function endFormat(value) {
     switch (typeof value) {
@@ -27,9 +27,11 @@ function endFormat(value) {
 }
 
 function tokenMatch(sets, file, index) {
-    for (let set of sets) {
-        if (file[index].value == set.from.value && file[index].type == set.from.type)
+    for (let i = 0; i < sets.length; i++) {
+        const set = sets[i];
+        if (file[index].value == set.from.value && file[index].type == set.from.type) {
             return set;
+        }
     }
     return 0;
 }
@@ -40,7 +42,7 @@ function handleDefinitions(filename, file) {
         const set = tokenMatch(sets, file, i);
         if (set) {
             file.splice(i, 1);
-            let start = i--;
+            const start = i--;
             while (++i - start < set.to.length) {
                 const t = set.to[i - start];
                 file.splice(i, 0, t.copy());
@@ -53,25 +55,27 @@ function handleDefinitions(filename, file) {
     for (let i = 0; i < file.length; i++) {
         const macro = tokenMatch(macros, file, i);
         if (macro && (!file[i - 1] || file[i - 1].value !== ".")) {
-            if (file[i + 1].value !== "(") continue;
+            if (file[i + 1].value !== "(") {
+                continue;
+            }
             file.splice(i, 2);
 
-            let params = [[]];
-            let brack = 1;
+            const params = [[]];
+            let braceCount = 1;
             const firstToken = file[i];
             let finalToken;
-            for (; brack; file.splice(i, 1)) {
+            for (; braceCount; file.splice(i, 1)) {
                 if (file[i].value == "(") {
-                    brack++;
+                    braceCount++;
                 }
                 if (file[i].value == ")") {
-                    brack--;
-                    if (brack == 0) {
+                    braceCount--;
+                    if (braceCount == 0) {
                         finalToken = file[i];
                         break;
                     }
                 }
-                if (file[i].value == "," && brack == 1) {
+                if (file[i].value == "," && braceCount == 1) {
                     params.push([]);
                     continue;
                 }
@@ -92,7 +96,7 @@ function handleDefinitions(filename, file) {
 
             let start = i;
             while (macro.code[i - start]) {
-                let t = macro.code[i - start];
+                const t = macro.code[i - start];
                 let replacement = false;
                 if (t.value == macro.rest) {
                     for (let f = 0; f < params.rest.length; f++) {
@@ -123,7 +127,7 @@ function handleDefinitions(filename, file) {
                     }
                 }
                 if (!replacement) {
-                    let tokenToAdd = token(t.type, t.value);
+                    const tokenToAdd = token(t.type, t.value);
                     if (macro.code.length == i - start + 1) {
                         tokenToAdd.line = finalToken.line;
                         tokenToAdd.character = finalToken.character;
@@ -145,20 +149,22 @@ function handleDefinitions(filename, file) {
     for (let i = 0; i < file.length; i++) {
         const procedure = tokenMatch(procedures, file, i);
         if (procedure && (!file[i - 1] || file[i - 1].value !== ".")) {
-            if (file[i + 1].value !== "(") continue;
+            if (file[i + 1].value !== "(") {
+                continue;
+            }
             const firstToken = file[i];
             file.splice(i, 2);
 
-            let params = [];
-            let brack = 1;
+            const params = [];
+            let braceCount = 1;
             let finalToken;
-            for (; brack; file.splice(i, 1)) {
+            for (; braceCount; file.splice(i, 1)) {
                 if (file[i].value == "(") {
-                    brack++;
+                    braceCount++;
                 }
                 if (file[i].value == ")") {
-                    brack--;
-                    if (brack == 0) {
+                    braceCount--;
+                    if (braceCount == 0) {
                         finalToken = file[i].copy();
                         finalToken.macroResult = true;
                         break;
@@ -175,8 +181,13 @@ function handleDefinitions(filename, file) {
             file.splice(i, 1);
             try {
                 const out = evaluate(toEval);
-                if (out !== emptyWriteValue)
-                    file.splice(i, 0, token("CookedValue", String(out), firstToken.line, firstToken.character));
+                if (typeof out != "string") {
+                    logError("procedure_output_not_string", firstToken, procedure, out);
+                }
+                const tokens = Tokenize(null, out);
+                for (let t = 0; t < tokens.length; t++) {
+                    file.splice(i++, 0, tokens[t]);
+                }
             } catch (e) {
                 finalToken.character++;
                 logError("procedure_js_error", procedure, firstToken, finalToken, e);

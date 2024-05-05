@@ -1,19 +1,44 @@
-const { logError } = require("../error");
-const { evaluate } = require("../util/eval");
+const { logError } = require("../error/error");
+const { evaluate } = require("../utils/eval");
 const { handleDefinitions, endFormat } = require("./sub_definitions");
 const { token, nonValue } = require("./tokenizer");
 
 function cook(filename, file) {
     for (let i = 0; i < file.length; i++) {
         const currentToken = file[i];
-        let firstToken = file[i].copy();
+        const firstToken = file[i].copy();
         if (currentToken.value == "$" && file[i + 1] && file[i + 1].value == "<") {
-            let brack = 1;
+            let braceCount = 1;
             let toCook = [file.splice(i, 2)[1]];
             let currentLastToken = 0;
-            while (brack && file[i]) {
-                if (file[i].value == "<" && (currentLastToken && nonValue[toCook[currentLastToken - 1].type] && toCook[currentLastToken - 1].value != ")" || !file[+i + 1] || nonValue[file[+i + 1].type] && file[+i + 1].value != "(")) brack++;
-                if (file[i].value == ">" && (currentLastToken && nonValue[toCook[currentLastToken - 1].type] && toCook[currentLastToken - 1].value != ")" || !file[+i + 1] || nonValue[file[+i + 1].type] && file[+i + 1].value != "(")) brack--;
+            while (braceCount && file[i]) {
+                if (
+                    file[i].value == "<" &&
+                    (
+                        (
+                            currentLastToken &&
+                            nonValue[toCook[currentLastToken - 1].type] &&
+                            toCook[currentLastToken - 1].value != ")"
+                        ) ||
+                        !file[+i + 1] ||
+                        ( nonValue[file[+i + 1].type] && file[+i + 1].value != "(" )
+                    )
+                ) {
+                    braceCount++;
+                } else if (
+                    file[i].value == ">" &&
+                    (
+                        (
+                            currentLastToken &&
+                            nonValue[toCook[currentLastToken - 1].type] &&
+                            toCook[currentLastToken - 1].value != ")"
+                        ) ||
+                        !file[+i + 1] ||
+                        ( nonValue[file[+i + 1].type] && file[+i + 1].value != "(" )
+                    )
+                ) {
+                    braceCount--;
+                }
                 toCook.push(file.splice(i, 1)[0]);
                 currentLastToken++;
             }
@@ -23,7 +48,7 @@ function cook(filename, file) {
                 }
                 logError("terminate_while_cooking", file, firstToken);
             }
-            let lastToken = file[i].copy();
+            const lastToken = file[i].copy();
 
             toCook = toCook.slice(1, -1);
             toCook = handleDefinitions(filename, toCook)

@@ -1,5 +1,5 @@
-const { logError } = require("../error");
-const { token } = require("../util/token");
+const { logError } = require("../error/error");
+const { token } = require("../utils/token");
 const { parseDestructure } = require("./tokenizer/parse_destructure");
 
 const operatorList = ["(", ")", "?", "#", "=>", "==>", "+", "-", "=", "*", "**", "/", "~", "^", "|", "&", "<<", ">>", ">>>", "%", "||", "&&", "++", "--", "!", "{", "}", "<", ">", "<=", ">=", "!==", "===", "==", "!=", "+=", "-=", "*=", "/=", "%=", "**=", "||=", ",", "&&=", "^=", "&=", "|=", ">>=", ">>>=", "<<=", ":", "[", "]", "$"];
@@ -13,10 +13,11 @@ function isOperatorCharacter(str) {
 }
 
 function Tokenize(filename, string) {
-    let templateBrack = 0;
+    let templateBraceCount = 0;
     const tokens = [];
     let currentToken = "";
     let literal;
+    let literalPos;
     let lineBreaks = 0;
     let character = 0;
     let commented = false;
@@ -29,8 +30,9 @@ function Tokenize(filename, string) {
             lineBreaks++;
             character = 0;
             tokens.push(token("LineBreak", "\n", lineBreaks, 0));
-            if (!directiveBraces)
+            if (!directiveBraces) {
                 currentDirective = null;
+            }
             continue;
         }
 
@@ -51,18 +53,22 @@ function Tokenize(filename, string) {
             continue;
         }
 
-        if (templateBrack && string[i] == "{") templateBrack++;
-        if (templateBrack && string[i] == "}") templateBrack--;
+        if (templateBraceCount && string[i] == "{") {
+            templateBraceCount++;
+        } else if (templateBraceCount && string[i] == "}") {
+            templateBraceCount--;
+        }
 
         if (string[i] == "\"" || string[i] == "'" || string[i] == "`") {
             literal = string[i];
+            literalPos = { line: lineBreaks, character: character };
             currentToken = string[i];
             const startPos = i;
             let characterOffset = 1;
             i++;
-            while (string[i] && !(string[i] === literal && string[i - 1] !== "\\")) {
+            while (!(string[i] === literal && string[i - 1] !== "\\")) {
                 characterOffset++;
-                if (literal == "`" && string[i] == "$" && string[i + 1] == "{") {
+                if (literal == "`" && !(string[i - 1] && string[i - 1] == "\\") && string[i] == "$" && string[i + 1] == "{") {
                     if (i - 1 != startPos) {
                         tokens.push(token("String", currentToken + "`", lineBreaks, character));
                         tokens.push(token("Operator", "+", lineBreaks, ++character + characterOffset));
@@ -74,9 +80,7 @@ function Tokenize(filename, string) {
                 currentToken += string[i];
                 i++;
             }
-            if (!string[i]) {
-                logError("terminate_while_string", { value: currentToken, line: lineBreaks, character });
-            } else if (string[i] == literal) {
+            if (string[i] == literal) {
                 tokens.push(token("String", currentToken + literal, lineBreaks, ++character));
                 literal = null;
             } else {
@@ -84,22 +88,26 @@ function Tokenize(filename, string) {
             }
             character += characterOffset;
             continue;
-        } else if (literal == "`" && !templateBrack && string[i] == "}") {
+        } else if (literal == "`" && !templateBraceCount && string[i] == "}") {
             let characterOffset = 1;
 
             tokens.push(token("Operator", ")", lineBreaks, character));
             if (string[i + 1] == "`") {
-                templateBrack = 0;
+                templateBraceCount = 0;
                 literal = null;
                 i++;
                 continue;
             }
-            if (string[i + 1] !== "$")
+            if (string[i + 1] !== "$") {
                 tokens.push(token("Operator", "+", lineBreaks, character));
+            }
             currentToken = "`";
             literal = "`";
             i++;
-            while (string[i] !== "`" && string[i]) {
+            while (!(!(string[i - 1] && string[i - 1] == "\\") && string[i] === "`")) {
+                if (!string[i]) {
+                    logError("terminate_while_string", { value: currentToken, line: literalPos.line, character: literalPos.character });
+                }
                 characterOffset++;
                 if (string[i] == "$" && string[i + 1] == "{") {
                     tokens.push(token("String", currentToken + "`", lineBreaks, character));
@@ -111,9 +119,7 @@ function Tokenize(filename, string) {
                 currentToken += string[i];
                 i++;
             }
-            if (!string[i]) {
-                logError("terminate_while_string", { value: currentToken, line: lineBreaks, character });
-            } else if (string[i] == "`") {
+            if (string[i] == "`") {
                 tokens.push(token("String", currentToken + "`", lineBreaks, ++character));
                 literal = null;
             } else {
@@ -157,8 +163,9 @@ function Tokenize(filename, string) {
                 dotCheck = true;
             }
             while (string[i] && (string[i].match(/[0-9_]/) || baseType == "x" && string[i].match(/[0-9a-fA-F_]/)) || string[i] == "." && !dotCheck) {
-                if (string[i] == ".")
+                if (string[i] == ".") {
                     dotCheck = true;
+                }
                 currentToken += string[i];
                 characterOffset++;
                 i++;
@@ -205,8 +212,11 @@ function Tokenize(filename, string) {
             i++;
             let squareBraces = 0;
             for (; string[i] && !(!squareBraces && string[i] == "/" && string[i - 1] != "\\"); i++) {
-                if (string[i] == "[") squareBraces++;
-                if (string[i] == "]") squareBraces--;
+                if (string[i] == "[") {
+                    squareBraces++;
+                } else if (string[i] == "]") {
+                    squareBraces--;
+                }
                 currentToken += string[i];
                 characterOffset++;
             }
@@ -221,7 +231,7 @@ function Tokenize(filename, string) {
                 i++;
             }
 
-            let outToken = token("RegExp", currentToken, lineBreaks, character);
+            const outToken = token("RegExp", currentToken, lineBreaks, character);
 
             try {
                 global.eval(currentToken);
@@ -244,8 +254,9 @@ function Tokenize(filename, string) {
                     str += string[j];
                     j++;
                 }
-                if (str)
+                if (str) {
                     currentDirective = str;
+                }
             }
             if (currentDirective) {
                 if (string[i] == "[") {
@@ -259,8 +270,9 @@ function Tokenize(filename, string) {
                 currentToken += string[i];
                 characterOffset++;
                 i++;
-                if (!operatorList.includes(currentToken + string[i]))
+                if (!operatorList.includes(currentToken + string[i])) {
                     break;
+                }
             }
             tokens.push(token("Operator", currentToken, lineBreaks, character));
             character += characterOffset;
@@ -271,10 +283,11 @@ function Tokenize(filename, string) {
     }
     for (let i = 0; i < tokens.length; i++) {
         if (tokens[i].value == "let" || tokens[i].value == "const" || tokens[i].value == "var" || tokens[i].value == "class" || tokens[i].value == "function") {
-            let variableType = tokens[i].value;
+            const variableType = tokens[i].value;
             const addVariable = variableToken => {
-                if (variables[filename][variableToken.value])
+                if (variables[filename][variableToken.value]) {
                     return;
+                }
                 variables[filename][variableToken.value] = token(variableType, variableToken.value, variableToken.line, variableToken.character);
             };
             i++;
@@ -284,8 +297,9 @@ function Tokenize(filename, string) {
             }
             if (tokens[i].type == "Identifier") {
                 while (tokens[i].type == "Operator" && tokens[i].value == "," || tokens[i].type == "Identifier") {
-                    if (tokens[i].type == "Identifier")
+                    if (tokens[i].type == "Identifier") {
                         addVariable(tokens[i]);
+                    }
                     i++;
                 }
             } else if (tokens[i].type == "Operator" && (tokens[i].value == "[" || tokens[i].value == "{")) {

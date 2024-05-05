@@ -1,7 +1,9 @@
 const path = require("path");
-const { Color, repeat, constructError, constructLineCheck, surroundingBlock, insertLine, replaceLine, formatPath, readErrorList, errors, parseErrorPosition } = require("../src/error");
-const { logCompilerError, FILE_EXTENSION, getCurrentFile } = require("../paisley");
+const { Color, repeat, constructError, constructLineCheck, surroundingBlock, insertLine, replaceLine, formatPath, readErrorList, errors, parseErrorPosition } = require("../src/error/error");
 const { Tokenize } = require("../src/compilation_steps/tokenizer");
+const { compilerError } = require("../src/error/internal_compiler_error");
+const { FILE_EXTENSION } = require("../src/utils/file_extension");
+const { getCurrentFile } = require("../src/utils/file_data");
 
 const errMap = {
     "not_a_function": e => e.includes("is not a function"),
@@ -26,7 +28,7 @@ function logRuntimeError(context, error) {
         throw error;
     }
     if (!errors[error]) {
-        logCompilerError("invalid_error", null, error);
+        compilerError("Invalid error [%s].", error);
         return;
     }
     context.tokenList = Tokenize(getCurrentFile(), context.originalFile);
