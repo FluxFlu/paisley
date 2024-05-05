@@ -1,4 +1,3 @@
-
 (context) => {
     const token = parseErrorPosition(context.error);
     const tokenLocation = context.locationMap[token.line + ":" + token.character];
@@ -7,6 +6,7 @@
     }
     token.line = +tokenLocation.split(":")[0];
     token.character = +tokenLocation.split(":")[1];
+    token.file = context.filename;
     const valueName = context.error.toString().split(' ')[1];
     const originalFile = context.originalFile;
     const format = surroundingBlock(originalFile, token.line);

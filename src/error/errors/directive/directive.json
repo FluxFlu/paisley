@@ -4,5 +4,8 @@
     
     "invalid_rest_in_macro": "rest_parameters",
 
-    "no_directive": "directives"
+    "no_directive": "directives",
+    "name_overlap": "directives",
+    "invalid_require": "require"
+
 }

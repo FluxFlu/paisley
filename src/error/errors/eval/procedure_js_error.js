@@ -1,4 +1,7 @@
 (procedure, firstToken, lastToken, error) => {
+    if (!firstToken || !lastToken) {
+        compilerError("Token does not exist: [%s%s%s].", Color.red, token, Color.reset);
+    }
     calcList(firstToken.line);
     const originalFile = getRawFile(getCurrentFile());
     const errorHelp = (

@@ -78,13 +78,11 @@ function main() {
         if (errorLocations[args[0]]) {
             console.log("Potentially relevant documentation for error " + BOLD_RED + args[0] + RESET + ":");
             printDocLink(errorLocations[args[0]]);
-        
-            // TODO: Spellchecking for if the user gets an incorrect doc-name.
-            // } else if (args[0]) {
-
+        } else if (args[0]) {
+            logUsageError("invalid_doc_name", args[0], errorLocations);
         } else {
             printFileLocation("../docs/index.html");
-            // console.log("Use " + BOLD_GREEN + "paisley --docs <errorName>" + RESET + " to see relevant documentation for any given error.");
+            console.log("Use " + BOLD_GREEN + "paisley --docs <errorName>" + RESET + " to see relevant documentation for any given error.");
         }
         process.exit(0);
     } else if (args.includes("--license")) {
@@ -130,11 +128,6 @@ function main() {
 
     if (getCompilerFlag("type") == "link") {
         writeLinkedFile(outfile);
-    }
-
-    // chmod +x
-    if (getCompilerFlag("make-script") == "true") {
-        fs.chmodSync(outfile, 500);
     }
 
     return 0;

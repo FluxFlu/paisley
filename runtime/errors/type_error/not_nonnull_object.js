@@ -7,6 +7,7 @@
     }
     token.line = +tokenLocation.split(":")[0];
     token.character = +tokenLocation.split(":")[1];
+    token.file = context.filename;
     for (let i = 0; i < context.tokenList.length; i++) {
         const currentToken = context.tokenList[i];
         if (currentToken.line == token.line && currentToken.character == token.character) {

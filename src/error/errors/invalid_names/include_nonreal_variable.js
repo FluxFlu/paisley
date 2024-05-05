@@ -1,6 +1,12 @@
 (filename, variableName, tokenList, checkedExports, allDeclarations) => {
     const token = tokenList[0];
-    const firstToken = tokenList[tokenList.findIndex(token => token.value == variableName)];
+    if (!token) {
+        compilerError("Token does not exist: [%s%s%s].", Color.red, token, Color.reset);
+    }
+    const firstToken = tokenList.find(token => token.value == variableName);
+    if (!firstToken) {
+        compilerError("First Token does not exist: [%s%s%s].", Color.red, firstToken, Color.reset);
+    }
     const originalFile = getRawFile(getCurrentFile());
     const format = surroundingBlock(originalFile, token.line);
     calcList(token.line);

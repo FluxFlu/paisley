@@ -14,6 +14,22 @@ const usageErrors = {
     "link_with_debug": () => [
         "Unable to use `--type link` with `--debug true`.",
     ],
+    "invalid_doc_name": (doc, validDocs) => {
+        if (!spellCheck) {
+            spellCheck = require("./error_utils/spellCheck").spellCheck;
+        }
+        const potentialValidDocs = spellCheck(Object.keys(validDocs), doc);
+        if (potentialValidDocs.length) {
+            return [
+                `Invalid error name in [--docs ${doc}].`,
+                help + "Did you mean any of the following:",
+                quote + potentialValidDocs.join("\n" + quote)
+            ];
+        }
+        return [
+            `Invalid error name in [--docs ${doc}].`
+        ];
+    },
     "invalid_compiler_flag": (flag, compilerFlags) => {
         if (!spellCheck) {
             spellCheck = require("./error_utils/spellCheck").spellCheck;

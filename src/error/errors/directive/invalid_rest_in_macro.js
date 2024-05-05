@@ -16,6 +16,9 @@
             consecutiveDots = 0;
         }
     }
+    if (!restToken) {
+        compilerError("Rest Token does not exist: [%s%s%s].", Color.red, token, Color.reset);
+    }
     restToken.character -= 3;
     restToken.value = "..." + restToken.value;
     const originalFile = getRawFile(getCurrentFile());

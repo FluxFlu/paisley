@@ -2,8 +2,8 @@ const path = require("path");
 const { Color, repeat, constructError, constructLineCheck, surroundingBlock, insertLine, replaceLine, formatPath, readErrorList, errors, parseErrorPosition } = require("../src/error/error");
 const { Tokenize } = require("../src/compilation_steps/tokenizer");
 const { compilerError } = require("../src/error/internal_compiler_error");
-const { FILE_EXTENSION } = require("../src/utils/file_extension");
 const { getCurrentFile } = require("../src/utils/file_data");
+const { FILE_EXTENSION } = require("../src/utils/file_extension");
 
 const errMap = {
     "not_a_function": e => e.includes("is not a function"),
@@ -32,8 +32,9 @@ function logRuntimeError(context, error) {
         return;
     }
     context.tokenList = Tokenize(getCurrentFile(), context.originalFile);
+    context.filename = path.relative(process.cwd(), path.normalize(module.parent.filename.replaceAll(".js", FILE_EXTENSION)));
     const errorText = errors[error](context);
-    console.error(Color.darkRed + "RuntimeError[" + error + "]: " + Color.reset + errorText[1] + "\n# " + formatPath(path.relative(process.cwd(), path.normalize(module.parent.filename.replaceAll(".js", FILE_EXTENSION)))) + errorText[2] + "\n\n" + errorText[3]);
+    console.error(Color.darkRed + "RuntimeError[" + error + "]: " + Color.reset + errorText[1] + "\n" + errorText[2] + "\n" + errorText[3]);
     if (errorText[0]) {
         printAborting();
         process.exit(1);

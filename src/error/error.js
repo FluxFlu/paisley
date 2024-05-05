@@ -10,9 +10,11 @@ function printAborting() {
 }
 
 const { getCompilerFlag } = require("../utils/compiler_flags");
-const { getCurrentFile } = require("../utils/file_data");
+const { getCurrentFile, getRawFile } = require("../utils/file_data");
 const { compilerError } = require("./internal_compiler_error");
 const { RED, BOLD_RED, GREEN, BOLD_GREEN, BOLD_BLUE, RESET } = require("../utils/colors");
+const { spellCheck } = require("./error_utils/spellCheck");
+const { FILE_EXTENSION } = require("../utils/file_extension");
 
 function repeat(num, char) {
     let out = "";
@@ -39,6 +41,9 @@ function constructError(...args) {
 }
 
 function constructLineCheck(token) {
+    if (!token) {
+        compilerError("Invalid token [%s%s%s].", Color.red, __filename, Color.reset);
+    }
     let out = "";
 
     if (token.line != undefined) {
@@ -48,7 +53,10 @@ function constructLineCheck(token) {
         }
     }
 
-    return out;
+    return filenameLine() + formatPath(
+        token.file ||
+        getCurrentFile()
+    ) + out;
 }
 
 function surroundingBlock(block, line, terminate = true, length = 3) {
@@ -85,6 +93,11 @@ function calcListCheck() {
 function lineNum(number) {
     calcListCheck();
     return Color.blue + `${repeat(listNum - (+number + 1).toString().length + 1, " ")}${number + 1} | ` + Color.reset;
+}
+
+function filenameLine() {
+    calcListCheck();
+    return Color.blue + ` ${repeat(listNum, " ")} # ` + Color.reset;
 }
 
 function emptyLine() {
@@ -215,7 +228,7 @@ function logError(error, ...args) {
         return;
     }
     const errorText = errors[error].apply(null, args);
-    console.error(Color.darkRed + "Error[" + error + "]: " + Color.reset + errorText[1] + "\n# " + formatPath(getCurrentFile()) + errorText[2] + "\n\n" + errorText[3]);
+    console.error(Color.darkRed + "Error[" + error + "]: " + Color.reset + errorText[1] + "\n" + errorText[2] + "\n" + emptyLine() + "\n" + errorText[3]);
     setErrorLogged(error);
     if (errorText[0]) {
         process.exit(1);
@@ -223,7 +236,7 @@ function logError(error, ...args) {
 }
 
 Error.log = (error, errorText) => {
-    console.error(Color.darkRed + "Error[" + error + "]: " + Color.reset + errorText[1] + "\n# " + formatPath(getCurrentFile()) + errorText[2] + "\n\n" + errorText[3]);
+    console.error(Color.darkRed + "Error[" + error + "]: " + Color.reset + errorText[1] + "\n" + errorText[2] + "\n\n" + errorText[3]);
     if (errorText[0]) {
         console.log("Aborting...\n");
         process.exit(1);

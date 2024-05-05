@@ -1,4 +1,7 @@
 (file, token) => {
+    if (!token) {
+        compilerError("Token does not exist: [%s%s%s].", Color.red, token, Color.reset);
+    }
     const originalFile = getRawFile(getCurrentFile());
     const format = surroundingBlock(originalFile, token.line);
     const codeBlock = format[0];

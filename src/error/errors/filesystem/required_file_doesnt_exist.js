@@ -1,5 +1,8 @@
 (filename, tokenList) => {
     const token = tokenList[0];
+    if (!token) {
+        compilerError("Token does not exist: [%s%s%s].", Color.red, token, Color.reset);
+    }
 
     const originalFile = getRawFile(getCurrentFile());
     const normalizedFilename = path.basename(filename);

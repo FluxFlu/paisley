@@ -1,5 +1,5 @@
 const path = require("node:path");
-// const crypto = require("crypto");
+const crypto = require("crypto");
 const { logError, formatPath } = require("../error/error");
 const { variables } = require("./tokenizer");
 const { validTypes } = require("./final");
@@ -30,35 +30,38 @@ function handleFlag(compile, filename, line) {
     for (let i = 0; i < flag.length; i++) {
         if (flag[i] == "[") {
             braceCount++;
-        }
-        if (flag[i] == "]") {
+        } else if (flag[i] == "]") {
             braceCount--;
-        }
-        if (validTypes[line[i].type] || line[i].type == "LineBreak") {
+            if (!braceCount) {
+                if (!flag[i + 1]) {
+                    break;
+                }
+                if (values[value].length === 0) {
+                    continue;
+                }
+                values.push([]);
+                value++;
+            }
+        } else if (validTypes[line[i].type] || line[i].type == "LineBreak") {
             values[value].push(line[i]);
         }
         if (!braceCount) {
             values[value] = values[value].slice(1, -1);
-            if (!flag[i + 1]) {
-                break;
-            }
-            if (values[value].length === 0) {
-                continue;
-            }
-            values.push([]);
-            value++;
         }
     }
     switch (fn) {
         case "define": {
             const name = line[0];
-            if (!line[0]) {
+            if (!name || name.value[0] == "[") {
                 logError("no_define_name_provided", copyLine[1]);
                 break;
             }
-            if (values[0].length == 0) {
+            if (values[0].length == 0 && !values[1]) {
                 logError("no_define_value_provided", line[0], line[1]);
                 break;
+            }
+            if (definitions[filename][name.value]) {
+                logError("name_overlap", copyLine, definitions[filename][name.value]);
             }
             definitions[filename][name.value] = { value: name.value, type: "Definition", from: line[0], to: values[0] };
             break;
@@ -77,6 +80,9 @@ function handleFlag(compile, filename, line) {
                     }
                 }
             }
+            if (definitions[filename][name.value]) {
+                logError("name_overlap", copyLine, definitions[filename][name.value]);
+            }
             definitions[filename][name.value] = { value: name.value, type: "Macro", from: name, params, rest, code };
             break;
         }
@@ -84,6 +90,9 @@ function handleFlag(compile, filename, line) {
             const name = line[0];
             const param = values[0][0].value;
             const code = values[1];
+            if (definitions[filename][name.value]) {
+                logError("name_overlap", copyLine, definitions[filename][name.value]);
+            }
             definitions[filename][name.value] = { value: name.value, type: "Procedure", from: name, param, code };
             break;
         }
@@ -135,6 +144,14 @@ function handleFlag(compile, filename, line) {
         }
         case "require": {
             const requires = flag.join("").split("from");
+            if (!requires[0] || !requires[1]) {
+                logError("invalid_require", copyLine);
+                break;
+            }
+            if (!(requires[0][0] == "[" && requires[0].at(-1) == "]" && requires[1][0] == "[" && requires[1].at(-1) == "]")) {
+                logError("invalid_require", copyLine);
+                break;
+            }
             const include = requires[0].slice(1, -1).split(",");
             let relativePath = requires[1].slice(1, -1);
             if (!path.extname(relativePath)) {
@@ -142,8 +159,6 @@ function handleFlag(compile, filename, line) {
             }
             const from = path.join(path.dirname(filename), relativePath);
             const to = from.replaceAll(FILE_EXTENSION, ".js");
-
-            linkNameMap.set(to, "_" + crypto.randomBytes(6).toString("hex"));
             
             writeFile(to, compile(from, [copyLine]));
             setCurrentFile(filename);
@@ -179,6 +194,7 @@ function handleFlag(compile, filename, line) {
             const realVariables = include.filter(e => !publicDefinitions[from][e]);
 
             if (realVariables.length) {
+                linkNameMap.set(to, "_" + crypto.randomBytes(6).toString("hex"));
                 switch (getCompilerFlag("type")) {
                     case "commonjs": {
                         final += "const{";

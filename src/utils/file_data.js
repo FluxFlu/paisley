@@ -1,4 +1,5 @@
 const fs = require("node:fs");
+const { compilerError } = require("../error/internal_compiler_error");
 
 const fileData = {
     currentFile: "",
@@ -29,6 +30,9 @@ function overwriteFileReader(map) {
 function getRawFile(filename) {
     if (fileReader) {
         return fileReader.get(filename);
+    }
+    if (!fs.existsSync(filename)) {
+        compilerError("Received invalid filename [%s].", filename);
     }
     return fs.readFileSync(filename, "utf-8")
         .replaceAll("\r\n", "\n")

@@ -6,6 +6,7 @@ const reportErrorLink = "https://github.com/FluxFlu/paisley/issues";
 
 function compilerError(error, ...args) {
     console.error(BOLD_RED + "Internal Compiler Error: " + RESET + error + "\n\n" + note + `Please report this error at ${reportErrorLink}`, ...args);
+    console.trace();
     process.exit(2);
 }
 

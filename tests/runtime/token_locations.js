@@ -22,8 +22,7 @@ module.exports = (consoleStorage) => {
                 type: "Error",
                 args: [
                     BOLD_RED + "RuntimeError[not_a_function]: " + RESET + "\"300\" is not a function.\n" +
-                    "# ./tests/runtime/token_locations.sly:1:4\n" +
-                    "\n" +
+                    `${BOLD_BLUE}   # ${RESET}./tests/runtime/token_locations.sly:1:4\n` +
                     `${BOLD_BLUE} 1 | ${RESET}300()\n` +
                     `${BOLD_BLUE}   | ${RESET}   ${RED}^ Attempted to call non-function value here${RESET}\n` +
                     `${BOLD_BLUE}   | ${RESET}\n`

@@ -1,3 +1,5 @@
+const { getCurrentFile } = require("./file_data");
+
 class Token {
     static potentialAttributes = [
         "type",
@@ -5,12 +7,14 @@ class Token {
         "line",
         "character",
         "macroResult",
+        "file",
     ];
     constructor(type, value, line, character) {
         this.type = type;
         this.value = value;
         this.line = line;
         this.character = character;
+        this.file = getCurrentFile();
     }
     copy() {
         const copy = new Token(this.type, this.value, this.line, this.character);
