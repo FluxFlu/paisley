@@ -1,6 +1,6 @@
 {
   "name": "paisley",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A grindy javascript precompiler. Javascript the way you want it.",
   "author": "Missy \"FluxFlu\"",
   "keywords": [
@@ -20,9 +20,8 @@
   "directories": {
     "doc": "docs"
   },
-  "main": "paisley",
   "bin": {
-    "paisley": "./paisley.js"
+    "paisley": "./src/main.js"
   },
   "files": [
     "./docs/**",
@@ -30,8 +29,7 @@
     "index.html",
     "./scripts/compile_markup.js",
     "./src/**",
-    "./LICENSE",
-    "./paisley.js"
+    "./LICENSE"
   ],
   "scripts": {
     "uniform_newlines": "node ./scripts/uniform_newlines.js ./",
