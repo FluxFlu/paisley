@@ -130,6 +130,7 @@ function Tokenize(filename, string) {
         } else if (
             string[i].match(/[0-9-.]/) &&
             (
+                string[i + 1] &&
                 string[i + 1].match(/[0-9_]/) ||
                 (
                     string[i] != "-" &&

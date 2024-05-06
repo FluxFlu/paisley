@@ -10,15 +10,14 @@ function cook(filename, file) {
         if (currentToken.value == "$" && file[i + 1] && file[i + 1].value == "<") {
             let braceCount = 1;
             let toCook = [file.splice(i, 2)[1]];
-            let currentLastToken = 0;
             while (braceCount && file[i]) {
                 if (
                     file[i].value == "<" &&
                     (
                         (
-                            currentLastToken &&
-                            nonValue[toCook[currentLastToken - 1].type] &&
-                            toCook[currentLastToken - 1].value != ")"
+                            toCook.length &&
+                            nonValue[toCook.at(-1).type] &&
+                            toCook.at(-1).value != ")"
                         ) ||
                         !file[+i + 1] ||
                         ( nonValue[file[+i + 1].type] && file[+i + 1].value != "(" )
@@ -29,9 +28,9 @@ function cook(filename, file) {
                     file[i].value == ">" &&
                     (
                         (
-                            currentLastToken &&
-                            nonValue[toCook[currentLastToken - 1].type] &&
-                            toCook[currentLastToken - 1].value != ")"
+                            toCook.length &&
+                            nonValue[toCook.at(-1).type] &&
+                            toCook.at(-1).value != ")"
                         ) ||
                         !file[+i + 1] ||
                         ( nonValue[file[+i + 1].type] && file[+i + 1].value != "(" )
@@ -40,7 +39,6 @@ function cook(filename, file) {
                     braceCount--;
                 }
                 toCook.push(file.splice(i, 1)[0]);
-                currentLastToken++;
             }
             if (!file[i]) {
                 for (let i = 0; i < toCook.length; i++) {

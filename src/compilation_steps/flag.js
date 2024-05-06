@@ -30,6 +30,9 @@ function handleFlag(compile, filename, line) {
     for (let i = 0; i < flag.length; i++) {
         if (flag[i] == "[") {
             braceCount++;
+            if (braceCount > 1) {
+                values[value].push(line[i]);
+            }
         } else if (flag[i] == "]") {
             braceCount--;
             if (!braceCount) {
@@ -41,6 +44,8 @@ function handleFlag(compile, filename, line) {
                 }
                 values.push([]);
                 value++;
+            } else {
+                values[value].push(line[i]);
             }
         } else if (validTypes[line[i].type] || line[i].type == "LineBreak") {
             values[value].push(line[i]);
@@ -97,7 +102,7 @@ function handleFlag(compile, filename, line) {
             break;
         }
         case "export": {
-            flag = flag.join("").slice(1, -1).split(",");
+            flag = flag.join("").slice(1, -1).split(",").map(e => e.trim());
 
             const realVariables = Object.entries(variables[filename]).filter(e => flag.includes(e[1].value)).map(e => e[0]);
             if (realVariables.length) {
@@ -152,7 +157,7 @@ function handleFlag(compile, filename, line) {
                 logError("invalid_require", copyLine);
                 break;
             }
-            const include = requires[0].slice(1, -1).split(",");
+            const include = requires[0].slice(1, -1).split(",").map(e => e.trim());
             let relativePath = requires[1].slice(1, -1);
             if (!path.extname(relativePath)) {
                 relativePath = relativePath + ".sly";

@@ -37,9 +37,10 @@ function compile(filename, requireValues) {
 
     checkInvalidNames(file);
 
+    let isNewline = true;
     for (let i = 0; i < file.length; i++) {
         const currentToken = file[i];
-        if (currentToken.value == "#" && file[i + 1]) {
+        if (currentToken.value == "#" && file[i + 1] && isNewline) {
             const flag = [];
             const back = i;
             let braceCount = 0;
@@ -51,8 +52,13 @@ function compile(filename, requireValues) {
                 }
                 flag.push(file.splice(i, 1)[0]);
             }
+
             const flagOut = handleFlag(compile, filename, flag, i);
             file.splice(back, 0, token(flagOut.isReal ? "PostFlag" : "CompilerValue", flagOut.value, flagOut.line, flagOut.character));
+        } else if (currentToken.value == "\n") {
+            isNewline = true;
+        } else {
+            isNewline = false;
         }
     }
 

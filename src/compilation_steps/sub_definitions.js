@@ -7,7 +7,7 @@ const { token, Tokenize } = require("./tokenizer");
 function endFormat(value) {
     switch (typeof value) {
         case "string": {
-            return `"${value.replaceAll("\"", "\\\"")}"`;
+            return `'${value.replaceAll("\"", "\\\"").replaceAll("'", "\"")}'`;
         }
         case "object": {
             if (value instanceof Array) {
